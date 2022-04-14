@@ -12,7 +12,7 @@ def main():
     app.app_context().push()
     db.drop_all()
     db.create_all()
-    app.run()
+    return app
 
 
 if __name__ == '__main__':
