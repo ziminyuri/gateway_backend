@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  redis:
+    container_name: redis-auth
+    image: redis:6.2-alpine
+    restart: always
+    ports:
+      - '6379:6379'
+    volumes:
+      - redis-auth:/data
+  db:
+    container_name: postgres-auth
+    image: postgres:13
+    volumes:
+      - postgres_auth:/var/lib/postgresql/data/
+    ports:
+      - '5432:5432'
+    env_file:
+      - .env.db
+
+
+volumes:
+  redis-auth:
+    name: redis-auth
+  postgres_auth:
+    name: postgres_auth
