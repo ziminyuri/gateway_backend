@@ -1,6 +1,6 @@
-from db import db
-from db.models import AuditModel, PrimaryModel
+from db.models.base import AuditModel, PrimaryModel
 from db.models.connect_tables import user_role_table
+from db.models.database import db
 
 
 class User(PrimaryModel, AuditModel):
