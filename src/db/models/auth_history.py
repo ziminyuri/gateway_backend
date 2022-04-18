@@ -12,4 +12,4 @@ class AuthHistory(PrimaryModel):
     user_agent = db.Column(db.String, nullable=False)
 
     user_id = db.Column(UUID(as_uuid=True), db.ForeignKey('user.id'))
-    user = db.relationship('User', back_populates='auth_history')
+    user = db.relationship('User', back_populates='history')

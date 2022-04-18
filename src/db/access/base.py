@@ -1,12 +1,14 @@
 from abc import ABC
 from typing import List, Optional
 
-from db import db
-from src.utils import get_logger
+from db.models.database import db
+from services.exceptions import DatabaseExceptions
+from utils import get_logger
 
 
 class DatabaseAccess(ABC):
     """Абстрактный класс для уровня доступа к базе данных"""
+
     def __init__(self, model: db.Model):
         self.model = model
         self.session = db.session
@@ -28,6 +30,7 @@ class DatabaseAccess(ABC):
         """Создание новой сущности"""
         entity = self.model(**kwargs)
         self._commit(entity)
+        return entity
 
     def _commit(self, entity: db.Model):
         """Создание сущности в базе данных или откат"""
@@ -39,3 +42,6 @@ class DatabaseAccess(ABC):
                 f"Error: {error} while committing {self.model}"
             )
             self.session.rollback()
+            raise DatabaseExceptions(
+                f"Во время создания модели: {self.model}"
+                f"возникла ошибка: {error}")
