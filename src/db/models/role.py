@@ -8,7 +8,7 @@ class Role(PrimaryModel):
 
     name = db.Column(db.String, nullable=False, unique=True)
     permissions = db.relationship('Permission', secondary=permission_role_table,
-                                  back_populates='roles', lazy=True)
+                                  backref='roles', lazy=True)
 
     def __repr__(self):
         return f'<Role {self.name}>'
