@@ -3,13 +3,15 @@ from http import HTTPStatus
 from flask import Blueprint
 from flask_restx import Api
 
-from api.v1.endpoints.roles import role_ns
+from api.v1.endpoints.roles import Role, Roles
+from core.config import BLUEPRINT_API, URL_PREFIX
 from services.exceptions import DatabaseExceptions
 
-blueprint = Blueprint('api', __name__, url_prefix='/api/v1')
-api = Api(blueprint, doc='/doc', title='Auth service')
+blueprint = Blueprint(BLUEPRINT_API, __name__, url_prefix=URL_PREFIX)
+api = Api(blueprint, doc=False, title='Auth service')
 
-api.add_namespace(role_ns)
+api.add_resource(Roles, '/role')
+api.add_resource(Role, '/role/<int:uuid>')
 
 
 @api.errorhandler(DatabaseExceptions)

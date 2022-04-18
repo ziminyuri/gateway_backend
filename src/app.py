@@ -2,8 +2,9 @@ from flask import Flask
 from flask_praetorian import Praetorian
 
 from api import blueprint
+from api.docs import docs
 from api.v1.serializers import ma
-from core.config import JWT_ACCESS_LIFESPAN, SECRET_KEY
+from core.config import update_config
 from db.models.database import init_db
 from db.models.user import User
 
@@ -12,12 +13,12 @@ guard = Praetorian()
 
 
 def main():
-    app.config["SECRET_KEY"] = SECRET_KEY
-    app.config["JWT_ACCESS_LIFESPAN"] = JWT_ACCESS_LIFESPAN
+    update_config(app)
     init_db(app)
     guard.init_app(app, User)
     ma.init_app(app)
     app.register_blueprint(blueprint)
+    docs.init_app(app)
     return app
 
 
