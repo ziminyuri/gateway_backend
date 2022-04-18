@@ -1,4 +1,5 @@
 from flask import Flask
+from flask_jwt_extended import JWTManager
 from flask_praetorian import Praetorian
 
 from api import blueprint
@@ -9,6 +10,7 @@ from db.models.user import User
 
 app = Flask(__name__)
 guard = Praetorian()
+jwt = JWTManager(app)
 
 
 def main():
@@ -18,6 +20,7 @@ def main():
     guard.init_app(app, User)
     ma.init_app(app)
     app.register_blueprint(blueprint)
+
     return app
 
 
