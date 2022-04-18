@@ -14,7 +14,6 @@ guard = Praetorian()
 def main():
     app.config["SECRET_KEY"] = SECRET_KEY
     app.config["JWT_ACCESS_LIFESPAN"] = JWT_ACCESS_LIFESPAN
-    app.config["PROPAGATE_EXCEPTIONS"] = False
     init_db(app)
     guard.init_app(app, User)
     ma.init_app(app)
