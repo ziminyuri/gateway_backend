@@ -1,9 +1,8 @@
 from uuid import UUID
 
-from sqlalchemy.orm.exc import NoResultFound
-
+from db.access import RoleAccess
 from db.access.base import DatabaseAccess
-from db.models import Role, User
+from db.models import User
 from db.models.connect_tables import user_role_table
 
 
@@ -11,14 +10,12 @@ class UserAccess(DatabaseAccess):
     """ Класс доступа к базе данных для пользователей """
 
     def __init__(self):
+        self.role_access = RoleAccess()
         super().__init__(User)
 
     def get_all_roles(self, id_: UUID):
         """Получить все роли пользователя"""
-        user = self.model.query.filter_by(id=id_).first()
-        if not user:
-            raise NoResultFound("User not found")
-
+        user = self.get_by_id(id_)
         return user.roles
 
     def assign_role(self, user_id: UUID, role_id: UUID):
@@ -44,9 +41,6 @@ class UserAccess(DatabaseAccess):
 
     def _get_user_role(self, user_id: UUID, role_id: UUID):
         """Получить пользователя и роль по uuid"""
-        user = self.model.query.filter_by(id=user_id).first()
-        role = self.session.query(Role).filter_by(id=role_id).first()
-        if not (user and role):
-            raise NoResultFound()
-
+        user = self.get_by_id(user_id)
+        role = self.role_access.get_by_id(role_id)
         return user, role
