@@ -14,7 +14,6 @@ def update_config(app: Flask):
     app.config['APISPEC_SPEC'] = APISPEC_SPEC
     app.config['APISPEC_SWAGGER_URL'] = APISPEC_SWAGGER_URL
     app.config['APISPEC_SWAGGER_UI_URL'] = APISPEC_SWAGGER_UI_URL
-    app.extensions['restx'] = {'apidoc_registered': True}
 
 
 POSTGRES_USER = os.getenv('POSTGRES_USER')
