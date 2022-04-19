@@ -1,8 +1,9 @@
 from flask import Flask
-from flask_praetorian import Praetorian
+
 
 from api import blueprint
 from api.docs import docs
+from api.auth import guard
 from api.v1.serializers import ma
 from core.config import update_config
 from db.models.database import init_db
@@ -10,7 +11,7 @@ from db.models.user import User
 from error_handlers import register_errors
 
 app = Flask(__name__)
-guard = Praetorian()
+
 
 
 def main():

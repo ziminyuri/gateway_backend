@@ -1,8 +1,9 @@
 from werkzeug.security import check_password_hash, generate_password_hash
-
+from api.auth import guard
 from db.models.base import AuditModel, PrimaryModel
 from db.models.connect_tables import user_role_table
 from db.models.database import db
+import uuid
 
 
 class User(PrimaryModel, AuditModel):
@@ -26,18 +27,22 @@ class User(PrimaryModel, AuditModel):
 
     @staticmethod
     def hash_password(password):
-        return generate_password_hash(password)
+        return guard.hash_password(password)
 
     def check_password(self, password):
         return check_password_hash(self.hashed_password, password)
 
     @property
     def identity(self):
-        return self.id
+        return str(self.id)
 
     @property
     def rolenames(self):
-        return [role.name for role in self.roles]
+        # return [role.name for role in self.roles]
+        try:
+            return self.roles.split(",")
+        except Exception:
+            return []
 
     @property
     def password(self):

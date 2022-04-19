@@ -1,24 +1,9 @@
-from flask_restx import fields
-
-from api.v1.endpoints import user_ns
-from api.v1.serializers import ma
-from db.models import User
-
-user_model = user_ns.model('User', {
-    'id': fields.String(description='User uuid'),
-    'username': fields.String(required=True, description='Username'),
-    'access_token': fields.String(description='Access token'),
-    'refresh_token': fields.String(description='Refresh token'),
-})
+from marshmallow import Schema, fields, validate
 
 
-auth_model = user_ns.model('Auth', {
-    'username': fields.String(required=True, description='Username'),
-    'password': fields.String(required=True, description='Password'),
-})
-
-
-class UserSchema(ma.SQLAlchemyAutoSchema):
-
-    class Meta:
-        model = User
+class AuthSchema(Schema):
+    id = fields.String(dump_only=True)
+    username = fields.String(required=True, validate=[validate.Length(max=255)])
+    password = fields.String(required=True, load_only=True, validate=[validate.Length(max=50)])
+    access_token = fields.String(dump_only=True)
+    refresh_token = fields.String(dump_only=True)

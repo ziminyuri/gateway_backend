@@ -1,29 +1,27 @@
 from http import HTTPStatus
 
-from flask import request
-from flask_jwt_extended import create_access_token, create_refresh_token
-from flask_restx import Resource
+from flask_restful import Resource
+from api.v1.serializers.users import AuthSchema
+from flask_apispec import doc, marshal_with, use_kwargs
+from api.auth import guard
 
-from api.v1.endpoints import user_ns
-from api.v1.serializers.users import auth_model, user_model
 from db.access import UserAccess
 from db.models import User
 
 user_access = UserAccess()
 
 
-@user_ns.route('/registration')
 class Registration(Resource):
 
-    @user_ns.expect(auth_model, validate=True)
-    @user_ns.marshal_with(user_model, code=HTTPStatus.CREATED)
-    def post(self):
+    @use_kwargs(AuthSchema)
+    @marshal_with(AuthSchema)
+    def post(self, **kwargs):
         """ Регистрация нового пользователя """
-        data = request.json
 
-        user = user_access.create(**data)
-        access_token = create_access_token(identity=data['username'])
-        refresh_token = create_refresh_token(identity=data['username'])
+        user = user_access.create(**kwargs)
+        auth = guard.authenticate(kwargs['username'], kwargs['password'])
+        access_token = guard.encode_jwt_token(auth)
+        refresh_token = guard.encode_jwt_token(auth)
 
         return {
             'id': user.id,
@@ -33,26 +31,22 @@ class Registration(Resource):
         }, HTTPStatus.CREATED
 
 
-@user_ns.route('/login')
 class Login(Resource):
-    def post(self):
+
+    @use_kwargs(AuthSchema)
+    @marshal_with(AuthSchema)
+    def post(self, **kwargs):
         """ Авторизация пользователя """
 
-        data = request.json
-
-        errors = user_model.validate(data)
-        if errors:
-            return str(errors), HTTPStatus.BAD_REQUEST
-
-        current_user = User.get_by_username(data['username'])
+        current_user = User.get_by_username(kwargs['username'])
 
         if not current_user:
-            return {'message': 'User {} doesn\'t exist'.format(data['username'])}, \
+            return {'message': 'User {} doesn\'t exist'.format(kwargs['username'])}, \
                    HTTPStatus.NOT_FOUND
-
-        if current_user.check_password(data['password']):
-            access_token = create_access_token(identity=data['username'])
-            refresh_token = create_refresh_token(identity=data['username'])
+        auth = guard.authenticate(kwargs['username'], kwargs['password'])
+        if auth:
+            access_token = guard.encode_jwt_token(auth)
+            refresh_token = guard.encode_jwt_token(auth)
             return {
                 'access_token': access_token,
                 'refresh_token': refresh_token
