@@ -3,5 +3,13 @@ from api.v1.serializers import ma
 
 class UserRoleSchema(ma.Schema):
 
-    user_id = ma.UUID(required=True)
     role_id = ma.UUID(required=True)
+
+
+def role_user_args_parse(**kwargs):
+    role_id = kwargs['role_id']
+    user_id = kwargs['user_id']
+    return {
+        'role_id': role_id,
+        'user_id': user_id
+    }

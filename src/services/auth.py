@@ -1,85 +1,99 @@
-from http import HTTPStatus
+from functools import wraps
 
-from flask import request
-from flask_jwt_extended import (create_access_token, create_refresh_token,
-                                get_jwt, get_jwt_identity, jwt_required)
+from flask import Flask, request
+from flask_jwt_extended import (JWTManager, create_access_token,
+                                create_refresh_token, decode_token, get_jwt,
+                                get_jwt_identity, jwt_required)
 
-from core.config import JWT_ACCESS_TOKEN_EXPIRE, JWT_REFRESH_TOKEN_EXPIRE
+from core.config import JWT_ACCESS_TOKEN_EXPIRES, JWT_REFRESH_TOKEN_EXPIRES
 from db.redis import cache
+from services.exceptions import TokenException
+
+jwt = JWTManager()
 
 
-def create_tokens(user, headers):
+def init_jwt(app: Flask):
+    jwt.init_app(app)
+
+
+@jwt.token_in_blocklist_loader
+def check_if_token_in_blacklist(_, jwt_data):
+    jti = jwt_data['jti']
+    token_from_cache = cache.get_value(jti)
+    return bool(token_from_cache)
+
+
+def create_tokens(user):
     """ Создание токенов для авторизации """
-    user_agent = headers.get('User-Agent', 'No User-Agent')
-    additional_claims = get_additional_claims(user, user_agent)
+    user_agent = get_user_agent()
+    additional_claims = get_additional_claims(user)
 
-    access_token = creating_access_token(user, user_agent, additional_claims)
-    refresh_token = create_refresh_token(identity=str(user.id), additional_claims=additional_claims)
-
-    cache.setex_value(
-        cache.make_key(user.id, user_agent, refresh_token=True),
-        refresh_token,
-        JWT_REFRESH_TOKEN_EXPIRE
-    )
+    access_token = create_access_token(identity=str(user.id), additional_claims=additional_claims)
+    refresh_token = creating_refresh_token(user, user_agent, additional_claims)
 
     return access_token, refresh_token
 
 
-def creating_access_token(user, user_agent, additional_claims: dict) -> str:
-    """ Создание access токена """
-    access_token = create_access_token(identity=str(user.id), additional_claims=additional_claims)
+def creating_refresh_token(user, user_agent, additional_claims: dict) -> str:
+    """ Создание refresh токена """
+    refresh_token = create_refresh_token(identity=str(user.id), additional_claims=additional_claims)
 
     cache.setex_value(
-        cache.make_key(user.id, user_agent),
-        access_token,
-        JWT_ACCESS_TOKEN_EXPIRE
+        cache.make_key(user.id, user_agent, refresh_token=True),
+        decode_token(refresh_token)['jti'],
+        JWT_REFRESH_TOKEN_EXPIRES
     )
 
-    return access_token
+    return refresh_token
 
 
-def login_required(func_to_decorate):
-    """ Декоратор, на проверку авторизации пользовталя """
+def login_required(superuser=False):
+    """ Декоратор, на проверку авторизации пользователя """
 
-    @jwt_required()
-    def wrapper(self):
-        user_agent = request.headers.get('User-Agent', 'No User-Agent')
-        user_id = get_jwt_identity()
-        if not is_valid_access_token(user_id, user_agent):
-            if cache.get_value(cache.make_key(user_id, user_agent, refresh_token=True)):
-                return {'message': 'Access token expired'}, HTTPStatus.UNAUTHORIZED
-            else:
-                return {'message': 'You should sign in'}, HTTPStatus.UNAUTHORIZED
+    def wrapper(func_to_decorate):
 
-        token = get_jwt()
-        func_to_decorate(self, **{
-            'user_agent': user_agent,
-            'permissions': token['permissions'],
-            'is_superuser': token['is_superuser'],
-            'user_id': user_id
-        })
+        @jwt_required()
+        @wraps(func_to_decorate)
+        def decorator(*args, **kwargs):
+            user_id = get_jwt_identity()
+            token = get_jwt()
+
+            if superuser and not token['is_superuser']:
+                raise TokenException("User does not have permissions")
+
+            kwargs.update({
+                'roles': token['roles'],
+                'is_superuser': token['is_superuser'],
+                'user_id': user_id
+            })
+            return func_to_decorate(*args, **kwargs)
+        return decorator
 
     return wrapper
 
 
-def is_valid_access_token(user_id, user_agent):
-    """ Проверка, что access токен не в списке удаленных """
-
-    token_from_request = request.headers.get('Authorization').split('Bearer ')[1]
-    token_from_cache = cache.get_value(cache.make_key(user_id, user_agent))
-    return True if token_from_request == token_from_cache else False
-
-
-def is_valid_refresh_token(user_id, user_agent, token_from_request):
+def is_valid_refresh_token(user_id, jti):
     """ Проверка, что refresh токен валидный """
 
+    user_agent = get_user_agent()
     token_from_cache = cache.get_value(cache.make_key(user_id, user_agent, refresh_token=True))
-    return True if token_from_request == token_from_cache else False
+    if not jti == token_from_cache:
+        raise TokenException('Refresh token is invalid')
+    return True
 
 
-def get_additional_claims(user, user_agent):
+def get_additional_claims(user):
     return {
-        'permissions': 'permissions',
+        'roles': user.roles,
         'is_superuser': user.is_superuser,
-        'user_agent': user_agent
     }
+
+
+def deactivate_tokens(user_id, jti):
+    user_agent = get_user_agent()
+    cache.setex_value(jti, user_id, JWT_ACCESS_TOKEN_EXPIRES)
+    cache.delete(cache.make_key(user_id, user_agent, refresh_token=True))
+
+
+def get_user_agent():
+    return request.headers.get('User-Agent', 'No User-Agent')

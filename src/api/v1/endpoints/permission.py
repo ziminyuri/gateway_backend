@@ -5,8 +5,10 @@ from flask_apispec import doc, marshal_with, use_kwargs
 from flask_apispec.views import MethodResource
 from flask_restful import Resource
 
-from api.v1.serializers.permission import PermissionSchema
+from api.v1.serializers.permission import (PermissionSchema,
+                                           permissions_args_parse)
 from db.access import PermissionAccess
+from services.auth import login_required
 
 permission_access = PermissionAccess()
 tag = 'Permission'
@@ -17,6 +19,7 @@ class Permissions(MethodResource, Resource):
     """Показать список всех привилегий или создать новую"""
 
     @marshal_with(PermissionSchema(many=True))
+    @login_required(superuser=True)
     def get(self):
         """Получить список всех привилегий"""
         permissions = permission_access.get_all()
@@ -24,9 +27,11 @@ class Permissions(MethodResource, Resource):
 
     @use_kwargs(PermissionSchema)
     @marshal_with(PermissionSchema)
+    @login_required(superuser=True)
     def post(self, **kwargs):
         """Создать новую привилегию"""
-        permission = permission_access.create(**kwargs)
+        permission_args = permissions_args_parse(**kwargs)
+        permission = permission_access.create(**permission_args)
 
         return permission, HTTPStatus.CREATED
 
@@ -36,6 +41,7 @@ class Permission(MethodResource, Resource):
     """Получить, удалить, изменить привилегию по uuid"""
 
     @marshal_with(PermissionSchema)
+    @login_required(superuser=True)
     def get(self, uuid: UUID):
         """Получить привилегии по uuid"""
         permission = permission_access.get_by_id(uuid)
@@ -43,11 +49,14 @@ class Permission(MethodResource, Resource):
 
     @use_kwargs(PermissionSchema)
     @marshal_with(PermissionSchema)
+    @login_required(superuser=True)
     def put(self, uuid: UUID, **kwargs):
         """Изменение привилегии"""
-        permission = permission_access.update(uuid, **kwargs)
+        permission_args = permissions_args_parse(**kwargs)
+        permission = permission_access.update(uuid, **permission_args)
         return permission, HTTPStatus.OK
 
+    @login_required(superuser=True)
     def delete(self, uuid: UUID):
         """Удаление привилегии"""
         permission_access.delete(uuid)

@@ -1,5 +1,7 @@
 from uuid import UUID
 
+from sqlalchemy.orm.exc import NoResultFound
+
 from db.access import RoleAccess
 from db.access.base import DatabaseAccess
 from db.models import User
@@ -12,6 +14,14 @@ class UserAccess(DatabaseAccess):
     def __init__(self):
         self.role_access = RoleAccess()
         super().__init__(User)
+
+    @staticmethod
+    def get_by_username(username):
+        user = User.lookup(username)
+        if not user:
+            raise NoResultFound(f"No record with username: {username}")
+
+        return user
 
     def get_all_roles(self, id_: UUID):
         """Получить все роли пользователя"""

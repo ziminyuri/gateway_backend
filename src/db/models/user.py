@@ -3,6 +3,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from db.models.base import AuditModel, PrimaryModel
 from db.models.connect_tables import user_role_table
 from db.models.database import db
+from services.exceptions import UserException
 
 
 class User(PrimaryModel, AuditModel):
@@ -28,7 +29,9 @@ class User(PrimaryModel, AuditModel):
         return generate_password_hash(password)
 
     def check_password(self, password):
-        return check_password_hash(self.hashed_password, password)
+        if not check_password_hash(self.hashed_password, password):
+            raise UserException('Wrong credentials')
+        return True
 
     @property
     def identity(self):
@@ -50,12 +53,13 @@ class User(PrimaryModel, AuditModel):
     def identify(cls, id):
         return cls.query.get(id)
 
+    @classmethod
+    def validate_username(cls, username):
+        if User.lookup(username):
+            raise UserException("Not valid username")
+
     def is_valid(self):
         return self.is_active
 
     def __repr__(self):
         return f'<User {self.username}>'
-
-    @classmethod
-    def get_by_username(cls, username):
-        return cls.query.filter_by(username=username).first()
