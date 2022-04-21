@@ -1,7 +1,7 @@
 from sqlalchemy.dialects.postgresql import UUID
 
+from db import db
 from db.models.base import AuditModel, PrimaryModel
-from db.models.database import db
 
 
 class Profile(PrimaryModel, AuditModel):

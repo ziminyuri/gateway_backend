@@ -1,6 +1,7 @@
 import pytest
 
 from src.app import main
+from src.db import db
 from tests.utils import create_test_db_url
 
 
@@ -12,7 +13,6 @@ def app():
     })
 
     yield app
-    from src.db.models.database import db
 
     db.drop_all()
 

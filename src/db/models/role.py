@@ -1,6 +1,6 @@
+from db import db
 from db.models.base import PrimaryModel
 from db.models.connect_tables import permission_role_table
-from db.models.database import db
 
 
 class Role(PrimaryModel):

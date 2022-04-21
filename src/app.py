@@ -4,7 +4,7 @@ from api import blueprint
 from api.docs import docs
 from api.v1.serializers import ma
 from core.config import update_config
-from db.models.database import init_db
+from db import init_db
 from error_handlers import register_errors
 from services.auth import init_jwt
 
