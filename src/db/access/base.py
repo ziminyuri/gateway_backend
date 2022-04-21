@@ -3,6 +3,7 @@ from typing import List, Optional
 from uuid import UUID
 
 from sqlalchemy.orm.exc import NoResultFound
+from sqlalchemy.sql import text
 
 from db.models.database import db
 from services.exceptions import DatabaseExceptions
@@ -26,11 +27,11 @@ class DatabaseAccess(ABC):
 
         return entity
 
-    def get_all(self, filters: Optional[dict] = None) -> List[db.Model]:
-        """Получаем все записи из базы данных с возможным фильтром"""
+    def get_all(self, filters: str) -> List[db.Model]:
+        """ Получаем все записи из базы данных с возможным фильтром """
         entities = self.model.query
         if filters:
-            entities = entities.filter_by(**filters)
+            entities = entities.filter(text(filters))
         return entities.all()
 
     def update(self, id_: UUID, **kwargs):

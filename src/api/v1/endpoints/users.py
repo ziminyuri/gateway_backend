@@ -7,13 +7,15 @@ from flask_restful import Resource
 
 from api.v1.serializers.users import (LoginSchema, RefreshSchema,
                                       RegisterSchema, TokenSchema)
-from db.access import UserAccess
+from db.access import AuthHistoryAccess, UserAccess
 from db.models import User
-from services.auth import (create_tokens, deactivate_tokens,
-                           get_additional_claims, is_valid_refresh_token,
+from services.auth import (create_tokens, deactivate_all_user_tokens,
+                           deactivate_tokens, get_additional_claims,
+                           get_user_agent, is_valid_refresh_token,
                            login_required)
 
 user_access = UserAccess()
+auth_history_access = AuthHistoryAccess()
 
 tag = 'User'
 
@@ -43,11 +45,10 @@ class Login(MethodResource, Resource):
 
         if current_user.check_password(kwargs['password']):
             access_token, refresh_token = create_tokens(current_user)
-
-            return {
-                       'access_token': access_token,
-                       'refresh_token': refresh_token
-                   }, HTTPStatus.OK
+            auth_history_params = _prepare_auth_history_params(current_user)
+            auth_history_access.create(**auth_history_params)
+            return {'access_token': access_token, 'refresh_token': refresh_token},\
+                HTTPStatus.OK
 
 
 @doc(tags=[tag])
@@ -57,6 +58,15 @@ class Logout(MethodResource, Resource):
         jti = get_jwt()["jti"]
         deactivate_tokens(kwargs['user_id'], jti)
         return {'message': 'Logout successful'}, HTTPStatus.OK
+
+
+@doc(tags=[tag])
+class LogoutFromEverywhere(MethodResource, Resource):
+    @login_required()
+    def get(self, **kwargs):
+        """ Выйти со всех устройств """
+        deactivate_all_user_tokens(kwargs['user_id'])
+        return {'message': 'You are logged out of all devices successfully'}, HTTPStatus.OK
 
 
 @doc(tags=[tag])
@@ -86,3 +96,7 @@ class Refresh(MethodResource, Resource):
                 str(user.id),
                 additional_claims=additional_claims
             )}, HTTPStatus.OK
+
+
+def _prepare_auth_history_params(current_user) -> dict:
+    return {'user_agent': get_user_agent(), 'user_id': current_user.id}

@@ -1,3 +1,4 @@
+from datetime import date, timedelta
 from functools import wraps
 
 from flask import Flask, request
@@ -6,10 +7,12 @@ from flask_jwt_extended import (JWTManager, create_access_token,
                                 get_jwt_identity, jwt_required)
 
 from core.config import JWT_ACCESS_TOKEN_EXPIRES, JWT_REFRESH_TOKEN_EXPIRES
+from db.access import AuthHistoryAccess
 from db.redis import cache
 from services.exceptions import TokenException
 
 jwt = JWTManager()
+auth_history_access = AuthHistoryAccess()
 
 
 def init_jwt(app: Flask):
@@ -34,7 +37,7 @@ def create_tokens(user):
     return access_token, refresh_token
 
 
-def creating_refresh_token(user, user_agent, additional_claims: dict) -> str:
+def creating_refresh_token(user, user_agent: str, additional_claims: dict) -> str:
     """ Создание refresh токена """
     refresh_token = create_refresh_token(identity=str(user.id), additional_claims=additional_claims)
 
@@ -72,7 +75,7 @@ def login_required(superuser=False):
     return wrapper
 
 
-def is_valid_refresh_token(user_id, jti):
+def is_valid_refresh_token(user_id, jti) -> bool:
     """ Проверка, что refresh токен валидный """
 
     user_agent = get_user_agent()
@@ -82,18 +85,26 @@ def is_valid_refresh_token(user_id, jti):
     return True
 
 
-def get_additional_claims(user):
+def get_additional_claims(user) -> dict:
     return {
         'roles': user.roles,
         'is_superuser': user.is_superuser,
     }
 
 
-def deactivate_tokens(user_id, jti):
+def deactivate_tokens(user_id, jti) -> None:
     user_agent = get_user_agent()
     cache.setex_value(jti, user_id, JWT_ACCESS_TOKEN_EXPIRES)
     cache.delete(cache.make_key(user_id, user_agent, refresh_token=True))
 
 
-def get_user_agent():
+def deactivate_all_user_tokens(user_id) -> None:
+    last_month = date.today().replace(day=1) - timedelta(1)
+    all_user_auth = auth_history_access.get_all_user_auth_for_period(user_id, last_month)
+
+    for user_auth in all_user_auth:
+        cache.delete(cache.make_key(user_id, user_auth.user_agent, refresh_token=True))
+
+
+def get_user_agent() -> str:
     return request.headers.get('User-Agent', 'No User-Agent')
