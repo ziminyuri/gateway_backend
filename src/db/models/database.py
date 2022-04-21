@@ -8,9 +8,10 @@ db = SQLAlchemy()
 
 
 def init_db(app: Flask):
-    db_url = f'postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@' \
-             f'{POSTGRES_HOST}:{POSTGRES_PORT}/{POSTGRES_DB}'
-    app.config['SQLALCHEMY_DATABASE_URI'] = db_url
+    if not app.config['TESTING']:
+        db_url = f'postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@' \
+                 f'{POSTGRES_HOST}:{POSTGRES_PORT}/{POSTGRES_DB}'
+        app.config['SQLALCHEMY_DATABASE_URI'] = db_url
     db.init_app(app)
     app.app_context().push()
     db.create_all()
