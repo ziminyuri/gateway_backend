@@ -18,6 +18,7 @@ api.add_resource(UserRoleManager, '/user/role')
 
 api.add_resource(Permissions, '/permission')
 api.add_resource(Permission, '/permission/<uuid:uuid>')
+
 api.add_resource(PermissionRoleManager, '/permission/role')
 api.add_resource(PermissionRole, '/permission/role/<uuid:uuid>')
 

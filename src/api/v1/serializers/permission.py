@@ -8,3 +8,8 @@ class PermissionSchema(ma.SQLAlchemyAutoSchema):
 
     class Meta:
         model = Permission
+
+
+def permissions_args_parse(**kwargs):
+    name = kwargs['name']
+    return {'name': name}

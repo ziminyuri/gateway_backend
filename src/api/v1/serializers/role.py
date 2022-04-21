@@ -8,3 +8,8 @@ class RoleSchema(ma.SQLAlchemyAutoSchema):
 
     class Meta:
         model = Role
+
+
+def role_args_parse(**kwargs):
+    name = kwargs['name']
+    return {'name': name}

@@ -1,13 +1,13 @@
 from http import HTTPStatus
-from uuid import UUID
 
 from flask_apispec import doc, marshal_with, use_kwargs
 from flask_apispec.views import MethodResource
 from flask_restful import Resource
 
 from api.v1.serializers.role import RoleSchema
-from api.v1.serializers.user_role import UserRoleSchema
+from api.v1.serializers.user_role import UserRoleSchema, role_user_args_parse
 from db.access import UserAccess
+from services.auth import login_required
 
 user_access = UserAccess()
 tag = 'User roles'
@@ -18,9 +18,11 @@ class UserRole(MethodResource, Resource):
     """Получить все роли пользователя"""
 
     @marshal_with(RoleSchema(many=True))
-    def get(self, uuid: UUID):
+    @login_required()
+    def get(self, **kwargs):
         """Получить список всех ролей"""
-        roles = user_access.get_all_roles(uuid)
+        user_id = kwargs['user_id']
+        roles = user_access.get_all_roles(user_id)
         return roles, HTTPStatus.OK
 
 
@@ -29,15 +31,19 @@ class UserRoleManager(MethodResource, Resource):
     """Назначит или убрать у пользователя роль"""
 
     @use_kwargs(UserRoleSchema)
+    @login_required()
     def post(self, **kwargs):
         """Выдать пользователю роль"""
-        user_access.assign_role(**kwargs)
+        role_user_args = role_user_args_parse(**kwargs)
+        user_access.assign_role(**role_user_args)
 
         return {'message': 'Role is assigned'}, HTTPStatus.CREATED
 
     @use_kwargs(UserRoleSchema)
+    @login_required()
     def put(self, **kwargs):
         """Убрать у пользователя роль"""
-        user_access.remove_role(**kwargs)
+        role_user_args = role_user_args_parse(**kwargs)
+        user_access.remove_role(**role_user_args)
 
         return {'message': 'Role is removed'}, HTTPStatus.OK
