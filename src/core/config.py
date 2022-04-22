@@ -8,7 +8,7 @@ from flask import Flask
 load_dotenv()
 
 
-def update_config(app: Flask):
+def update_config(app: Flask, config):
     app.config["SECRET_KEY"] = SECRET_KEY
     app.config["JWT_SECRET_KEY"] = JWT_SECRET_KEY
     app.config['JWT_ACCESS_TOKEN_EXPIRES'] = JWT_ACCESS_TOKEN_EXPIRES
@@ -18,6 +18,9 @@ def update_config(app: Flask):
     app.config['APISPEC_SPEC'] = APISPEC_SPEC
     app.config['APISPEC_SWAGGER_URL'] = APISPEC_SWAGGER_URL
     app.config['APISPEC_SWAGGER_UI_URL'] = APISPEC_SWAGGER_UI_URL
+
+    if config:
+        app.config.update(config)
 
 
 POSTGRES_USER = os.getenv('POSTGRES_USER')

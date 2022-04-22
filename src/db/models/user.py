@@ -1,8 +1,8 @@
 from werkzeug.security import check_password_hash, generate_password_hash
 
+from db import db
 from db.models.base import AuditModel, PrimaryModel
 from db.models.connect_tables import user_role_table
-from db.models.database import db
 from services.exceptions import UserException
 
 

@@ -5,7 +5,7 @@ from uuid import UUID
 from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy.sql import text
 
-from db.models.database import db
+from db import db
 from services.exceptions import DatabaseExceptions
 from utils import get_logger
 

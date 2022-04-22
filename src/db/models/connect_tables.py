@@ -1,6 +1,6 @@
 from sqlalchemy.dialects.postgresql import UUID
 
-from db.models.database import db
+from db import db
 
 user_role_table = db.Table(
     'user_role',

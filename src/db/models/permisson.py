@@ -1,5 +1,5 @@
+from db import db
 from db.models.base import PrimaryModel
-from db.models.database import db
 
 
 class Permission(PrimaryModel):
