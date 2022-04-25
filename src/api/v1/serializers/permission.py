@@ -1,5 +1,5 @@
-from api.v1.serializers import ma
-from db.models import Permission
+from src.api.v1.serializers import ma
+from src.db.models import Permission
 
 
 class PermissionSchema(ma.SQLAlchemyAutoSchema):

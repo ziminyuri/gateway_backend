@@ -1,6 +1,6 @@
-from db import db
-from db.models.base import PrimaryModel
-from db.models.connect_tables import permission_role_table
+from src.db import db
+from src.db.models.base import PrimaryModel
+from src.db.models.connect_tables import permission_role_table
 
 
 class Role(PrimaryModel):

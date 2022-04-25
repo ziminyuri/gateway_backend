@@ -1,8 +1,8 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 
-from core.config import (POSTGRES_DB, POSTGRES_HOST, POSTGRES_PASSWORD,
-                         POSTGRES_PORT, POSTGRES_USER)
+from src.core.config import (POSTGRES_DB, POSTGRES_HOST, POSTGRES_PASSWORD,
+                             POSTGRES_PORT, POSTGRES_USER)
 
 db = SQLAlchemy()
 

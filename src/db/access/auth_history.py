@@ -1,5 +1,5 @@
-from db.access.base import DatabaseAccess
-from db.models import AuthHistory
+from src.db.access.base import DatabaseAccess
+from src.db.models import AuthHistory
 
 
 class AuthHistoryAccess(DatabaseAccess):

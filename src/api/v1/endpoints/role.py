@@ -5,9 +5,9 @@ from flask_apispec import doc, marshal_with, use_kwargs
 from flask_apispec.views import MethodResource
 from flask_restful import Resource
 
-from api.v1.serializers.role import RoleSchema, role_args_parse
-from db.access import RoleAccess
-from services.auth import login_required
+from src.api.v1.serializers.role import RoleSchema, role_args_parse
+from src.db.access import RoleAccess
+from src.services.auth import login_required
 
 role_access = RoleAccess()
 tag = 'Role'

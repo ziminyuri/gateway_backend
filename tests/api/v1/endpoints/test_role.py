@@ -1,8 +1,8 @@
 import pytest
 
-from core.config import URL_PREFIX
-from db import db
-from db.models import Role
+from src.core.config import URL_PREFIX
+from src.db import db
+from src.db.models import Role
 from tests.testdata.role import role
 from tests.utils import get_headers
 

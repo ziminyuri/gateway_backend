@@ -5,14 +5,14 @@ from flask_apispec.views import MethodResource
 from flask_jwt_extended import create_access_token, get_jwt, jwt_required
 from flask_restful import Resource
 
-from api.v1.serializers.users import (LoginSchema, RefreshSchema,
-                                      RegisterSchema, TokenSchema)
-from db.access import AuthHistoryAccess, UserAccess
-from db.models import User
-from services.auth import (create_tokens, deactivate_all_user_tokens,
-                           deactivate_tokens, get_additional_claims,
-                           get_user_agent, is_valid_refresh_token,
-                           login_required)
+from src.api.v1.serializers.users import (LoginSchema, RefreshSchema,
+                                          RegisterSchema, TokenSchema)
+from src.db.access import AuthHistoryAccess, UserAccess
+from src.db.models import User
+from src.services.auth import (create_tokens, deactivate_all_user_tokens,
+                               deactivate_tokens, get_additional_claims,
+                               get_user_agent, is_valid_refresh_token,
+                               login_required)
 
 user_access = UserAccess()
 auth_history_access = AuthHistoryAccess()

@@ -5,9 +5,9 @@ from uuid import UUID
 from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy.sql import text
 
-from db import db
-from services.exceptions import DatabaseExceptions
-from utils import get_logger
+from src.db import db
+from src.services.exceptions import DatabaseExceptions
+from src.utils import get_logger
 
 
 class DatabaseAccess(ABC):
@@ -27,7 +27,7 @@ class DatabaseAccess(ABC):
 
         return entity
 
-    def get_all(self, filters: str) -> List[db.Model]:
+    def get_all(self, filters: str = None) -> List[db.Model]:
         """ Получаем все записи из базы данных с возможным фильтром """
         entities = self.model.query
         if filters:

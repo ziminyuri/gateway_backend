@@ -1,9 +1,9 @@
 from uuid import UUID
 
-from db.access import PermissionAccess
-from db.access.base import DatabaseAccess
-from db.models import Role
-from db.models.connect_tables import permission_role_table
+from src.db.access import PermissionAccess
+from src.db.access.base import DatabaseAccess
+from src.db.models import Role
+from src.db.models.connect_tables import permission_role_table
 
 
 class RoleAccess(DatabaseAccess):

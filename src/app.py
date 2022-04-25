@@ -1,12 +1,12 @@
 from flask import Flask
 
-from api import blueprint
-from api.docs import docs
-from api.v1.serializers import ma
-from core.config import update_config
-from db import init_db
-from error_handlers import register_errors
-from services.auth import init_jwt
+from src.api import blueprint
+from src.api.docs import docs
+from src.api.v1.serializers import ma
+from src.core.config import update_config
+from src.db import init_db
+from src.error_handlers import register_errors
+from src.services.auth import init_jwt
 
 app = Flask(__name__)
 

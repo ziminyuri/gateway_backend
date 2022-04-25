@@ -1,5 +1,5 @@
-from api.v1.serializers import ma
-from db.models import Role
+from src.api.v1.serializers import ma
+from src.db.models import Role
 
 
 class RoleSchema(ma.SQLAlchemyAutoSchema):

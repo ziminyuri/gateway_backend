@@ -1,10 +1,10 @@
 from flask_apispec import FlaskApiSpec
 
-from api.v1.endpoints import (Login, Logout, Permission, PermissionRole,
-                              PermissionRoleManager, Permissions, Refresh,
-                              Registration, Role, Roles, SecretResource,
-                              UserRole, UserRoleManager)
-from core.config import BLUEPRINT_API
+from src.api.v1.endpoints import (Login, Logout, Permission, PermissionRole,
+                                  PermissionRoleManager, Permissions, Refresh,
+                                  Registration, Role, Roles, SecretResource,
+                                  UserRole, UserRoleManager)
+from src.core.config import BLUEPRINT_API
 
 docs = FlaskApiSpec()
 

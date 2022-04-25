@@ -2,10 +2,10 @@ from uuid import UUID
 
 from sqlalchemy.orm.exc import NoResultFound
 
-from db.access import RoleAccess
-from db.access.base import DatabaseAccess
-from db.models import User
-from db.models.connect_tables import user_role_table
+from src.db.access import RoleAccess
+from src.db.access.base import DatabaseAccess
+from src.db.models import User
+from src.db.models.connect_tables import user_role_table
 
 
 class UserAccess(DatabaseAccess):
