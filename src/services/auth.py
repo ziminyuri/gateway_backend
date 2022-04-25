@@ -6,10 +6,10 @@ from flask_jwt_extended import (JWTManager, create_access_token,
                                 create_refresh_token, decode_token, get_jwt,
                                 get_jwt_identity, jwt_required)
 
-from core.config import JWT_ACCESS_TOKEN_EXPIRES, JWT_REFRESH_TOKEN_EXPIRES
-from db.access import AuthHistoryAccess
-from db.redis import cache
-from services.exceptions import TokenException
+from src.core.config import JWT_ACCESS_TOKEN_EXPIRES, JWT_REFRESH_TOKEN_EXPIRES
+from src.db.access import AuthHistoryAccess
+from src.db.redis import cache
+from src.services.exceptions import TokenException
 
 jwt = JWTManager()
 auth_history_access = AuthHistoryAccess()

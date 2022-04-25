@@ -5,10 +5,10 @@ from flask_apispec import doc, marshal_with, use_kwargs
 from flask_apispec.views import MethodResource
 from flask_restful import Resource
 
-from api.v1.serializers.permission import (PermissionSchema,
-                                           permissions_args_parse)
-from db.access import PermissionAccess
-from services.auth import login_required
+from src.api.v1.serializers.permission import (PermissionSchema,
+                                               permissions_args_parse)
+from src.db.access import PermissionAccess
+from src.services.auth import login_required
 
 permission_access = PermissionAccess()
 tag = 'Permission'

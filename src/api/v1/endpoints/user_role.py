@@ -4,10 +4,11 @@ from flask_apispec import doc, marshal_with, use_kwargs
 from flask_apispec.views import MethodResource
 from flask_restful import Resource
 
-from api.v1.serializers.role import RoleSchema
-from api.v1.serializers.user_role import UserRoleSchema, role_user_args_parse
-from db.access import UserAccess
-from services.auth import login_required
+from src.api.v1.serializers.role import RoleSchema
+from src.api.v1.serializers.user_role import (UserRoleSchema,
+                                              role_user_args_parse)
+from src.db.access import UserAccess
+from src.services.auth import login_required
 
 user_access = UserAccess()
 tag = 'User roles'

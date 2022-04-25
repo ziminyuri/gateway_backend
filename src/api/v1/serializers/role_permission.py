@@ -1,4 +1,4 @@
-from api.v1.serializers import ma
+from src.api.v1.serializers import ma
 
 
 class PermissionRoleSchema(ma.Schema):

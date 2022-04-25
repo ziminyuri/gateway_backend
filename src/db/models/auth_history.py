@@ -1,8 +1,8 @@
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.sql.functions import func
 
-from db import db
-from db.models.base import PrimaryModel
+from src.db import db
+from src.db.models.base import PrimaryModel
 
 
 class AuthHistory(PrimaryModel):

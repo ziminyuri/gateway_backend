@@ -1,11 +1,12 @@
 from flask import Blueprint
 from flask_restful import Api
 
-from api.v1.endpoints import (Login, Logout, LogoutFromEverywhere, Permission,
-                              PermissionRole, PermissionRoleManager,
-                              Permissions, Refresh, Registration, Role, Roles,
-                              SecretResource, UserRole, UserRoleManager)
-from core.config import BLUEPRINT_API, URL_PREFIX
+from src.api.v1.endpoints import (Login, Logout, LogoutFromEverywhere,
+                                  Permission, PermissionRole,
+                                  PermissionRoleManager, Permissions, Refresh,
+                                  Registration, Role, Roles, SecretResource,
+                                  UserRole, UserRoleManager)
+from src.core.config import BLUEPRINT_API, URL_PREFIX
 
 blueprint = Blueprint(BLUEPRINT_API, __name__, url_prefix=URL_PREFIX)
 api = Api(blueprint)

@@ -1,5 +1,5 @@
-from db.access.base import DatabaseAccess
-from db.models import Permission
+from src.db.access.base import DatabaseAccess
+from src.db.models import Permission
 
 
 class PermissionAccess(DatabaseAccess):

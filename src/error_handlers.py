@@ -4,8 +4,8 @@ from flask import Flask
 from marshmallow.exceptions import ValidationError
 from sqlalchemy.orm.exc import NoResultFound
 
-from services.exceptions import (DatabaseExceptions, TokenException,
-                                 UserException)
+from src.services.exceptions import (DatabaseExceptions, TokenException,
+                                     UserException)
 
 
 def handle_db_exception(error):

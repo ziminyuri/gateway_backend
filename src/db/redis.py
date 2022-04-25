@@ -2,7 +2,7 @@ import pickle
 
 import redis
 
-from core.config import REDIS_HOST, REDIS_PORT
+from src.core.config import REDIS_HOST, REDIS_PORT
 
 
 class Redis:
