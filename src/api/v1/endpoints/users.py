@@ -5,11 +5,14 @@ from flask_apispec.views import MethodResource
 from flask_jwt_extended import create_access_token, get_jwt, jwt_required
 from flask_restful import Resource
 
-from src.api.v1.serializers.users import (LoginSchema, RefreshSchema,
-                                          RegisterSchema, TokenSchema)
+from src.api.v1.serializers.users import (AuthHistory, ChangePassword,
+                                          LoginSchema, PersonalChanges,
+                                          RefreshSchema, RegisterSchema,
+                                          TokenSchema)
 from src.db.access import AuthHistoryAccess, UserAccess
 from src.db.models import User
-from src.services.auth import (create_tokens, deactivate_all_user_tokens,
+from src.services.auth import (change_password, change_personal_data,
+                               create_tokens, deactivate_all_user_tokens,
                                deactivate_tokens, get_additional_claims,
                                get_user_agent, is_valid_refresh_token,
                                login_required)
@@ -70,11 +73,36 @@ class LogoutFromEverywhere(MethodResource, Resource):
 
 
 @doc(tags=[tag])
-class SecretResource(MethodResource, Resource):
+class AuthHistory(MethodResource, Resource):
+
+    @marshal_with(AuthHistory(many=True))
     @login_required()
     def get(self, **personal_data):
-        """ URL для проверки работы токена """
-        return {}, HTTPStatus.OK
+        """ История входов пользователя """
+        return auth_history_access.get_all(f"user_id = '{personal_data['user_id']}'"),\
+            HTTPStatus.OK
+
+
+@doc(tags=[tag])
+class ChangePersonalData(MethodResource, Resource):
+
+    @use_kwargs(PersonalChanges)
+    @login_required()
+    def post(self, **kwargs):
+        """ Внесение изменений в пользовательские данные """
+        change_personal_data(kwargs)
+        return {'message': 'User successfully updated.'}, HTTPStatus.OK
+
+
+@doc(tags=[tag])
+class ChangePassword(MethodResource, Resource):
+
+    @use_kwargs(ChangePassword)
+    @login_required()
+    def post(self, **kwargs):
+        """ Внесение изменений в пользовательские данные """
+        change_password(kwargs)
+        return {'message': 'Password successfully updated.'}, HTTPStatus.OK
 
 
 @doc(tags=[tag])

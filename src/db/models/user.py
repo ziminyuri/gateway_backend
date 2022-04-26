@@ -33,6 +33,11 @@ class User(PrimaryModel, AuditModel):
             raise UserException('Wrong credentials')
         return True
 
+    def check_new_password(self, new_password):
+        if self.hashed_password == self.hash_password(new_password):
+            raise UserException('Passwords match')
+        return True
+
     @property
     def identity(self):
         return str(self.id)

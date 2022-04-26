@@ -20,3 +20,17 @@ class TokenSchema(Schema):
 class RefreshSchema(Schema):
     access_token = fields.String(dump_only=True)
     refresh_token = fields.String(required=True, load_only=True)
+
+
+class PersonalChanges(Schema):
+    username = fields.String(load_only=True)
+
+
+class ChangePassword(Schema):
+    old_password = fields.String(load_only=True, required=True)
+    new_password = fields.String(load_only=True, required=True)
+
+
+class AuthHistory(Schema):
+    login_at = fields.DateTime(dump_only=True)
+    user_agent = fields.String(dump_only=True)
