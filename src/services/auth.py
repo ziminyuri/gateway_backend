@@ -7,12 +7,14 @@ from flask_jwt_extended import (JWTManager, create_access_token,
                                 get_jwt_identity, jwt_required)
 
 from src.core.config import JWT_ACCESS_TOKEN_EXPIRES, JWT_REFRESH_TOKEN_EXPIRES
-from src.db.access import AuthHistoryAccess
+from src.db.access import AuthHistoryAccess, UserAccess
+from src.db.models import User
 from src.db.redis import cache
 from src.services.exceptions import TokenException
 
 jwt = JWTManager()
 auth_history_access = AuthHistoryAccess()
+user_access = UserAccess()
 
 
 def init_jwt(app: Flask):
@@ -104,6 +106,24 @@ def deactivate_all_user_tokens(user_id) -> None:
 
     for user_auth in all_user_auth:
         cache.delete(cache.make_key(user_id, user_auth.user_agent, refresh_token=True))
+
+
+def change_personal_data(personal_data):
+    changes = {k: v for k, v in personal_data.items()
+               if k not in ['user_id', 'roles', 'is_superuser']}
+    if changes.get('username') is not None:
+        User.validate_username(changes['username'])
+    user_access.update(personal_data['user_id'], **changes)
+
+
+def change_password(personal_data):
+    old_password = personal_data['old_password']
+    new_password = personal_data['new_password']
+    user = user_access.get_by_id(personal_data['user_id'])
+    user.check_password(old_password)
+    user.check_new_password(new_password)
+    user_access.update(personal_data['user_id'],
+                       **{'hashed_password': user.hash_password(new_password)})
 
 
 def get_user_agent() -> str:

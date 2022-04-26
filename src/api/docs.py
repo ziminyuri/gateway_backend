@@ -1,9 +1,11 @@
 from flask_apispec import FlaskApiSpec
 
-from src.api.v1.endpoints import (Login, Logout, Permission, PermissionRole,
+from src.api.v1.endpoints import (AuthHistory, ChangePassword,
+                                  ChangePersonalData, Login, Logout,
+                                  Permission, PermissionRole,
                                   PermissionRoleManager, Permissions, Refresh,
-                                  Registration, Role, Roles, SecretResource,
-                                  UserRole, UserRoleManager)
+                                  Registration, Role, Roles, UserRole,
+                                  UserRoleManager)
 from src.core.config import BLUEPRINT_API
 
 docs = FlaskApiSpec()
@@ -22,4 +24,6 @@ docs.register(Login, blueprint=BLUEPRINT_API)
 docs.register(Logout, blueprint=BLUEPRINT_API)
 docs.register(Registration, blueprint=BLUEPRINT_API)
 docs.register(Refresh, blueprint=BLUEPRINT_API)
-docs.register(SecretResource, blueprint=BLUEPRINT_API)
+docs.register(AuthHistory, blueprint=BLUEPRINT_API)
+docs.register(ChangePersonalData, blueprint=BLUEPRINT_API)
+docs.register(ChangePassword, blueprint=BLUEPRINT_API)
