@@ -1,11 +1,12 @@
 import json
+from http import HTTPStatus
 
 import pytest
 
-from core.config import URL_PREFIX
-from db import db
-from db.access import UserAccess
-from db.models import Role, User
+from src.core.config import URL_PREFIX
+from src.db import db
+from src.db.access import UserAccess
+from src.db.models import Role, User
 from tests.testdata.role import create_role_data, initial_role_data
 from tests.utils import get_headers
 
@@ -39,7 +40,7 @@ class TestUserRole:
         response = client.get(self.endpoint, headers=get_headers(access_token))
         data = response.json
 
-        assert response.status_code == 200
+        assert response.status_code == HTTPStatus.OK
         assert isinstance(data, list)
         assert any([role['id'] == initial_role for role in data])
 
@@ -50,7 +51,7 @@ class TestUserRole:
                                data=json.dumps(role_for_user),
                                headers=get_headers(access_token))
 
-        assert response.status_code == 201
+        assert response.status_code == HTTPStatus.CREATED
         assert response.json['message'] == 'Role is assigned'
 
         with app.app_context():
@@ -67,7 +68,7 @@ class TestUserRole:
                               data=json.dumps(data),
                               headers=get_headers(access_token))
 
-        assert response.status_code == 200
+        assert response.status_code == HTTPStatus.OK
         assert response.json['message'] == 'Role is removed'
 
         with app.app_context():

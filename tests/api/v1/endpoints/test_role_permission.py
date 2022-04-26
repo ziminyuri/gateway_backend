@@ -1,11 +1,12 @@
 import json
+from http import HTTPStatus
 
 import pytest
 
-from core.config import URL_PREFIX
-from db import db
-from db.access import RoleAccess
-from db.models import Permission, Role
+from src.core.config import URL_PREFIX
+from src.db import db
+from src.db.access import RoleAccess
+from src.db.models import Permission, Role
 from tests.testdata.permission import create_perm_data, initial_perm_data
 from tests.testdata.role import initial_role_data
 from tests.utils import get_headers
@@ -46,7 +47,7 @@ class TestUserRole:
                               headers=get_headers(access_token))
         data = response.json
 
-        assert response.status_code == 200
+        assert response.status_code == HTTPStatus.OK
         assert isinstance(data, list)
         assert any([permission['id'] == permission_id for permission in data])
 
@@ -57,7 +58,7 @@ class TestUserRole:
                                data=json.dumps(permission_for_role),
                                headers=get_headers(access_token))
 
-        assert response.status_code == 201
+        assert response.status_code == HTTPStatus.CREATED
         assert response.json['message'] == 'Permission is added'
 
         with app.app_context():
@@ -75,7 +76,7 @@ class TestUserRole:
                               data=json.dumps(payload),
                               headers=get_headers(access_token))
 
-        assert response.status_code == 200
+        assert response.status_code == HTTPStatus.OK
         assert response.json['message'] == 'Permission is removed'
 
         with app.app_context():

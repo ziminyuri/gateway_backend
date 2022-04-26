@@ -8,18 +8,17 @@ from src.db import init_db
 from src.error_handlers import register_errors
 from src.services.auth import init_jwt
 
-app = Flask(__name__)
-
 
 def main(config=None):
-    update_config(app, config)
-    init_db(app)
-    ma.init_app(app)
-    app.register_blueprint(blueprint)
-    docs.init_app(app)
-    register_errors(app)
-    init_jwt(app)
-    return app
+    flask_app = Flask(__name__)
+    update_config(flask_app, config)
+    init_db(flask_app)
+    ma.init_app(flask_app)
+    flask_app.register_blueprint(blueprint)
+    docs.init_app(flask_app)
+    register_errors(flask_app)
+    init_jwt(flask_app)
+    return flask_app
 
 
 if __name__ == '__main__':

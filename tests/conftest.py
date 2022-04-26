@@ -2,10 +2,10 @@ import json
 
 import pytest
 
-from db import db
-from db.models import User
 from src.app import main
 from src.core.config import URL_PREFIX
+from src.db import db
+from src.db.models import User
 from tests.testdata.user import base_user, super_user
 from tests.utils import create_test_db_url
 
