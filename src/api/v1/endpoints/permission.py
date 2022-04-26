@@ -20,7 +20,7 @@ class Permissions(MethodResource, Resource):
 
     @marshal_with(PermissionSchema(many=True))
     @login_required(superuser=True)
-    def get(self):
+    def get(self, **kwargs):
         """Получить список всех привилегий"""
         permissions = permission_access.get_all()
         return permissions, HTTPStatus.OK
@@ -42,7 +42,7 @@ class Permission(MethodResource, Resource):
 
     @marshal_with(PermissionSchema)
     @login_required(superuser=True)
-    def get(self, uuid: UUID):
+    def get(self, uuid: UUID, **kwargs):
         """Получить привилегии по uuid"""
         permission = permission_access.get_by_id(uuid)
         return permission, HTTPStatus.OK
@@ -57,7 +57,7 @@ class Permission(MethodResource, Resource):
         return permission, HTTPStatus.OK
 
     @login_required(superuser=True)
-    def delete(self, uuid: UUID):
+    def delete(self, uuid: UUID, **kwargs):
         """Удаление привилегии"""
         permission_access.delete(uuid)
         return {'message': 'Permission is deleted'}, HTTPStatus.OK

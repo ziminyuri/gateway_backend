@@ -38,7 +38,7 @@ class DatabaseAccess(ABC):
         """Обновление сущности"""
         self.model.query.filter_by(id=id_).update(kwargs)
         self.commit()
-        return self.model.query.filter_by(id=id_).first()
+        return self.get_by_id(id_)
 
     def delete(self, id_: UUID):
         self.model.query.filter_by(id=id_).delete()

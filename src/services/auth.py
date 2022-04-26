@@ -87,7 +87,7 @@ def is_valid_refresh_token(user_id, jti) -> bool:
 
 def get_additional_claims(user) -> dict:
     return {
-        'roles': user.roles,
+        'roles': [role.name for role in user.roles],
         'is_superuser': user.is_superuser,
     }
 
