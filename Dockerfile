@@ -8,6 +8,6 @@ COPY ./requirements.txt requirements.txt
 
 RUN pip install --no-cache-dir --upgrade -r requirements.txt
 
-COPY . /usr/src/app
+COPY ./src ./src
 
 CMD ["gunicorn", "src.wsgi:app", "--bind", "0.0.0.0:5000"]
