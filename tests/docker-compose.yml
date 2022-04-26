@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  redis:
+    container_name: test-redis-auth
+    image: redis:6.2-alpine
+    restart: always
+    ports:
+      - '6379'
+  db:
+    container_name: test-postgres-auth
+    image: postgres:13
+    ports:
+      - '5432'
+    env_file:
+      - .env.test.prod
+    depends_on:
+      - redis
+  web:
+    build:
+      context: ..
+      dockerfile: ./Dockerfile.test
+    container_name: test-auth-api
+    volumes:
+      - ..:/usr/src/app/
+    env_file:
+      - .env.test.prod
+    depends_on:
+      - db
+    ports:
+        - '8000:8000'

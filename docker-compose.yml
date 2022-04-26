@@ -6,19 +6,35 @@ services:
     image: redis:6.2-alpine
     restart: always
     ports:
-      - '6379:6379'
+      - '6379'
     volumes:
       - redis-auth:/data
-
   db:
     container_name: postgres-auth
     image: postgres:13
     volumes:
       - postgres_auth:/var/lib/postgresql/data/
     ports:
-      - '5432:5432'
+      - '5432'
     env_file:
-      - .env
+      - .env.prod
+    depends_on:
+      - redis
+  web:
+    build: .
+    container_name: auth-api
+    volumes:
+      - .:/usr/src/app
+    env_file:
+      - .env.prod
+    depends_on:
+      - db
+  nginx:
+    build: ./nginx
+    ports:
+      - '8000:80'
+    depends_on:
+      - web
 
 
 volumes:
