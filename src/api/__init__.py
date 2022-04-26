@@ -14,14 +14,14 @@ api = Api(blueprint)
 api.add_resource(Roles, '/role')
 api.add_resource(Role, '/role/<uuid:uuid>')
 
-api.add_resource(UserRole, '/user/role/<uuid:uuid>')
+api.add_resource(UserRole, '/user/role')
 api.add_resource(UserRoleManager, '/user/role')
 
 api.add_resource(Permissions, '/permission')
 api.add_resource(Permission, '/permission/<uuid:uuid>')
 
 api.add_resource(PermissionRoleManager, '/permission/role')
-api.add_resource(PermissionRole, '/permission/role/<uuid:uuid>')
+api.add_resource(PermissionRole, '/permission/role/<uuid:role_uuid>')
 
 api.add_resource(Login, '/auth/login')
 api.add_resource(Logout, '/auth/logout')

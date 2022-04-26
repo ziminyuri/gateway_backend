@@ -4,6 +4,12 @@ super_user = {
         'is_superuser': True
     }
 
+base_user = {
+    'username': 'base_test_client',
+    'password': 'test',
+    'is_superuser': False
+}
+
 
 users = [
     {
