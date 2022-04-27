@@ -26,11 +26,6 @@ class UserRole(MethodResource, Resource):
         roles = user_access.get_all_roles(user_id)
         return roles, HTTPStatus.OK
 
-
-@doc(tags=[tag])
-class UserRoleManager(MethodResource, Resource):
-    """Назначит или убрать у пользователя роль"""
-
     @use_kwargs(UserRoleSchema)
     @login_required()
     def post(self, **kwargs):
