@@ -6,7 +6,7 @@ from src.api.v1.endpoints import (AuthHistory, ChangePassword,
                                   LogoutFromEverywhere, Permission,
                                   PermissionRole, PermissionRoleManager,
                                   Permissions, Refresh, Registration, Role,
-                                  Roles, UserRole, UserRoleManager)
+                                  Roles, UserRole)
 from src.core.config import BLUEPRINT_API, URL_PREFIX
 
 blueprint = Blueprint(BLUEPRINT_API, __name__, url_prefix=URL_PREFIX)
@@ -16,7 +16,6 @@ api.add_resource(Roles, '/role')
 api.add_resource(Role, '/role/<uuid:uuid>')
 
 api.add_resource(UserRole, '/user/role')
-api.add_resource(UserRoleManager, '/user/role')
 
 api.add_resource(Permissions, '/permission')
 api.add_resource(Permission, '/permission/<uuid:uuid>')

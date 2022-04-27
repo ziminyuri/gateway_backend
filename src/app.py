@@ -21,6 +21,4 @@ def main(config=None):
     return flask_app
 
 
-if __name__ == '__main__':
-    app = main()
-    app.run(host='0.0.0.0', port=5000, debug=True)
+app = main()
