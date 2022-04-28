@@ -51,9 +51,9 @@ class TestUserRole:
         assert isinstance(data, list)
         assert any([permission['id'] == permission_id for permission in data])
 
-    def test_create_role_permission(self, app, client, login_user, permission_for_role):
+    def test_create_role_permission(self, app, client, login_super_user, permission_for_role):
         """Тест присвоение полномочий к роле"""
-        access_token, _ = login_user
+        access_token, _ = login_super_user
         response = client.post(self.endpoint,
                                data=json.dumps(permission_for_role),
                                headers=get_headers(access_token))
@@ -67,11 +67,12 @@ class TestUserRole:
             assert any([str(permission.id) == permission_for_role['permission_id']
                         for permission in permissions])
 
-    def test_delete_permission_from_role(self, app, client, login_user, initial_role_permission):
+    def test_delete_permission_from_role(self, app, client, login_super_user,
+                                         initial_role_permission):
         """Тест удаление полномочий у роли"""
         role_id, permission_id = initial_role_permission
         payload = {'role_id': role_id, 'permission_id': permission_id}
-        access_token, _ = login_user
+        access_token, _ = login_super_user
         response = client.put(self.endpoint,
                               data=json.dumps(payload),
                               headers=get_headers(access_token))

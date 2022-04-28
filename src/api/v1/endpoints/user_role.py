@@ -27,7 +27,7 @@ class UserRole(MethodResource, Resource):
         return roles, HTTPStatus.OK
 
     @use_kwargs(UserRoleSchema)
-    @login_required()
+    @login_required(superuser=True)
     def post(self, **kwargs):
         """Выдать пользователю роль"""
         role_user_args = role_user_args_parse(**kwargs)
@@ -36,7 +36,7 @@ class UserRole(MethodResource, Resource):
         return {'message': 'Role is assigned'}, HTTPStatus.CREATED
 
     @use_kwargs(UserRoleSchema)
-    @login_required()
+    @login_required(superuser=True)
     def put(self, **kwargs):
         """Убрать у пользователя роль"""
         role_user_args = role_user_args_parse(**kwargs)

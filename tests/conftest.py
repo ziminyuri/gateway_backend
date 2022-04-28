@@ -18,6 +18,7 @@ def app():
         'TESTING': True,
         'SQLALCHEMY_DATABASE_URI': create_test_db_url(),
     })
+    db.create_all()
 
     yield app
 
@@ -40,6 +41,7 @@ def create_super_user(app):
         user = User(**super_user)
         db.session.add(user)
         db.session.commit()
+        return user.id
 
 
 @pytest.fixture(scope='class')

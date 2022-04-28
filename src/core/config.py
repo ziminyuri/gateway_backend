@@ -8,7 +8,7 @@ from flask import Flask
 load_dotenv()
 
 
-def update_config(app: Flask, config):
+def update_config(app: Flask, config: dict):
     app.config["SECRET_KEY"] = SECRET_KEY
     app.config["JWT_SECRET_KEY"] = JWT_SECRET_KEY
     app.config['JWT_ACCESS_TOKEN_EXPIRES'] = JWT_ACCESS_TOKEN_EXPIRES
@@ -35,10 +35,10 @@ JWT_SECRET_KEY = os.getenv('JWT_SECRET_KEY')
 JWT_BLACKLIST_ENABLED = True
 JWT_BLACKLIST_TOKEN_CHECKS = ['access']
 JWT_ACCESS_TOKEN_EXPIRES = 15 * 60
-# JWT_ACCESS_TOKEN_EXPIRES = 30
 JWT_REFRESH_TOKEN_EXPIRES = 30 * 24 * 60 * 60
 
-BLUEPRINT_API = 'api'
+BLUEPRINT_ROLE_API = 'role_api'
+BLUEPRINT_AUTH_API = 'auth_api'
 URL_PREFIX = '/api/v1'
 
 APISPEC_SPEC = APISpec(

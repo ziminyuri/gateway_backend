@@ -10,4 +10,4 @@ RUN pip install --no-cache-dir --upgrade -r requirements.txt
 
 COPY ./src ./src
 
-CMD ["gunicorn", "src.wsgi:app", "--bind", "0.0.0.0:5000"]
+ENTRYPOINT ["/bin/sh", "-c" , "cd src && flask db upgrade && cd .. && gunicorn src.wsgi:app --bind 0.0.0.0:5000"]
