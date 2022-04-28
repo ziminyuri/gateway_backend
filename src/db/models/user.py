@@ -34,7 +34,7 @@ class User(PrimaryModel, AuditModel):
         return True
 
     def check_new_password(self, new_password):
-        if self.hashed_password == self.hash_password(new_password):
+        if check_password_hash(self.hashed_password, new_password):
             raise UserException('Passwords match')
         return True
 

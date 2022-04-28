@@ -10,6 +10,12 @@ def create_test_db_url():
 
 def get_headers(access_token):
     return {
-        "Content-Type": "application/json",
-        "Authorization": f"Bearer {access_token}"
+        'Content-Type': 'application/json',
+        'Authorization': f'Bearer {access_token}'
+    }
+
+
+def get_user_agent(user_agent):
+    return {
+        'User-Agent': user_agent
     }
