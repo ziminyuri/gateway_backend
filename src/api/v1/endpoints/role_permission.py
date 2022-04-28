@@ -32,7 +32,7 @@ class PermissionRoleManager(MethodResource, Resource):
     """Назначит или убрать у пользователя роль"""
 
     @use_kwargs(PermissionRoleSchema)
-    @login_required()
+    @login_required(superuser=True)
     def post(self, **kwargs):
         """Выдать пользователю роль"""
         role_permission_args = role_permission_args_parse(**kwargs)
@@ -41,7 +41,7 @@ class PermissionRoleManager(MethodResource, Resource):
         return {'message': 'Permission is added'}, HTTPStatus.CREATED
 
     @use_kwargs(PermissionRoleSchema)
-    @login_required()
+    @login_required(superuser=True)
     def put(self, **kwargs):
         """Убрать у пользователя роль"""
         role_permission_args = role_permission_args_parse(**kwargs)

@@ -14,4 +14,4 @@ def init_db(app: Flask):
         app.config['SQLALCHEMY_DATABASE_URI'] = db_url
     app.app_context().push()
     db.init_app(app)
-    db.create_all()
+    return db
