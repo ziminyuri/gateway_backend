@@ -16,8 +16,7 @@ from src.services.auth import (change_password, change_personal_data,
                                deactivate_tokens, get_additional_claims,
                                get_user_agent, is_valid_refresh_token,
                                login_required)
-
-from src.utils import pagination
+from src.utils import get_pagination_params
 
 user_access = UserAccess()
 auth_history_access = AuthHistoryAccess()
@@ -77,14 +76,15 @@ class LogoutFromEverywhere(MethodResource, Resource):
 @doc(tags=[tag])
 class AuthHistory(MethodResource, Resource):
 
-    # @marshal_with(AuthHistory(many=True))
+    @marshal_with(AuthHistory(many=True))
     @login_required()
     def get(self, **personal_data):
         """ История входов пользователя """
-        pagination.paginate(auth_history_access.get_all(f"user_id = '{personal_data['user_id']}'"),
-                            AuthHistory(many=True), marshmallow=True), HTTPStatus.OK
-        # return auth_history_access.get_all(f"user_id = '{personal_data['user_id']}'"),\
-        #     HTTPStatus.OK
+        res = auth_history_access.get_all(
+            f"user_id = '{personal_data['user_id']}'",
+            get_pagination_params()
+        )
+        return res, HTTPStatus.OK
 
 
 @doc(tags=[tag])

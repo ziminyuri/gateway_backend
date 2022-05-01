@@ -27,11 +27,19 @@ class DatabaseAccess(ABC):
 
         return entity
 
-    def get_all(self, filters: str = None) -> List[db.Model]:
+    def get_all(self, filters: str = None, pagination: dict = None) -> List[db.Model]:
         """ Получаем все записи из базы данных с возможным фильтром """
         entities = self.model.query
         if filters:
             entities = entities.filter(text(filters))
+        if pagination:
+            if pagination['page'] is not None and pagination['number'] is not None:
+                t = entities.paginate(
+                    pagination['page'],
+                    pagination['number'],
+                    False
+                )
+                return t.items
         return entities.all()
 
     def update(self, id_: UUID, **kwargs):
