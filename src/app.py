@@ -9,6 +9,8 @@ from src.db import init_db
 from src.error_handlers import register_errors
 from src.services.auth import init_jwt
 from src.commands import init_commands
+from src.utils import pagination_init
+
 
 migrate = Migrate()
 
@@ -25,6 +27,7 @@ def main(config=None):
     register_errors(flask_app)
     init_jwt(flask_app)
     init_commands(flask_app)
+    pagination_init(flask_app, db)
     return flask_app
 
 
