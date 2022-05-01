@@ -4,6 +4,7 @@ from flask_migrate import Migrate
 from src.api.blueprints import auth_bp, role_bp
 from src.api.docs import docs
 from src.api.v1.serializers import ma
+from src.commands import init_commands
 from src.core.config import update_config
 from src.db import init_db
 from src.error_handlers import register_errors
@@ -23,6 +24,7 @@ def main(config=None):
     docs.init_app(flask_app)
     register_errors(flask_app)
     init_jwt(flask_app)
+    init_commands(flask_app)
     return flask_app
 
 

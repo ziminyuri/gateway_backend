@@ -16,6 +16,7 @@ from src.services.auth import (change_password, change_personal_data,
                                deactivate_tokens, get_additional_claims,
                                get_user_agent, is_valid_refresh_token,
                                login_required)
+from src.utils import get_pagination_params
 
 user_access = UserAccess()
 auth_history_access = AuthHistoryAccess()
@@ -79,8 +80,11 @@ class AuthHistory(MethodResource, Resource):
     @login_required()
     def get(self, **personal_data):
         """ История входов пользователя """
-        return auth_history_access.get_all(f"user_id = '{personal_data['user_id']}'"),\
-            HTTPStatus.OK
+        res = auth_history_access.get_all(
+            f"user_id = '{personal_data['user_id']}'",
+            get_pagination_params()
+        )
+        return res, HTTPStatus.OK
 
 
 @doc(tags=[tag])
