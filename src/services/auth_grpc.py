@@ -24,11 +24,11 @@ class AuthServicer(auth_pb2_grpc.AuthServicer):
 
             except (JWTExtendedException, PyJWTError) as error:
                 self.error_response(grpc.StatusCode.UNAUTHENTICATED,
-                                    str(error).encode(), context)
+                                    str(error), context)
 
             except Exception as error:
                 self.error_response(grpc.StatusCode.ABORTED,
-                                    str(error).encode(), context)
+                                    str(error), context)
 
     def GetRoles(self, request, context):
         with self.flask_app.app_context():
@@ -39,11 +39,11 @@ class AuthServicer(auth_pb2_grpc.AuthServicer):
 
             except (JWTExtendedException, PyJWTError) as error:
                 self.error_response(grpc.StatusCode.UNAUTHENTICATED,
-                                    str(error).encode(), context)
+                                    str(error), context)
 
             except Exception as error:
                 self.error_response(grpc.StatusCode.ABORTED,
-                                    str(error).encode(), context)
+                                    str(error), context)
 
     def IsAuthorized(self, request, context):
         with self.flask_app.app_context():
@@ -56,7 +56,7 @@ class AuthServicer(auth_pb2_grpc.AuthServicer):
 
             except Exception as error:
                 self.error_response(grpc.StatusCode.ABORTED,
-                                    str(error).encode(), context)
+                                    str(error), context)
 
     @staticmethod
     def error_response(code, error, context):
