@@ -1,12 +1,12 @@
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from src.db import db
-from src.db.models.base import AuditModel, PrimaryModel
+from src.db.models.base import AuditModel, PrimaryUuidModel
 from src.db.models.connect_tables import user_role_table
 from src.services.exceptions import UserException
 
 
-class User(PrimaryModel, AuditModel):
+class User(PrimaryUuidModel, AuditModel):
     __tablename__ = 'user'
 
     username = db.Column(db.String, unique=True, nullable=False)

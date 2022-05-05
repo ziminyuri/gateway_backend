@@ -6,13 +6,23 @@ from sqlalchemy.sql.functions import func
 from src.db import db
 
 
-class PrimaryModel(db.Model):
-    """Абстрактная модель с primary key"""
+class PrimaryUuidModel(db.Model):
+    """Абстрактная модель с uuid primary key"""
     __abstract__ = True
 
     id = db.Column(UUID(as_uuid=True),
                    primary_key=True,
                    default=uuid.uuid4,
+                   unique=True,
+                   nullable=False)
+
+
+class PrimaryIdModel(db.Model):
+    """Абстрактная модель с id primary key"""
+    __abstract__ = True
+
+    id = db.Column(db.Integer,
+                   primary_key=True,
                    unique=True,
                    nullable=False)
 

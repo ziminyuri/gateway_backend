@@ -23,7 +23,7 @@ class PermissionRole(MethodResource, Resource):
     @login_required()
     def get(self, role_uuid: UUID, **kwargs):
         """Получить список всех ролей"""
-        permissions = role_access.get_all_permissions(role_uuid)
+        permissions = role_access.get_role_permissions(role_uuid)
         return permissions, HTTPStatus.OK
 
 

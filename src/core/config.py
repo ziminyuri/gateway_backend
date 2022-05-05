@@ -18,6 +18,7 @@ def update_config(app: Flask, config: dict):
     app.config['APISPEC_SPEC'] = APISPEC_SPEC
     app.config['APISPEC_SWAGGER_URL'] = APISPEC_SWAGGER_URL
     app.config['APISPEC_SWAGGER_UI_URL'] = APISPEC_SWAGGER_UI_URL
+    # app.config['SQLALCHEMY_ECHO'] = True
 
     if config:
         app.config.update(config)
@@ -34,7 +35,7 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 JWT_SECRET_KEY = os.getenv('JWT_SECRET_KEY')
 JWT_BLACKLIST_ENABLED = True
 JWT_BLACKLIST_TOKEN_CHECKS = ['access']
-JWT_ACCESS_TOKEN_EXPIRES = 15 * 60
+JWT_ACCESS_TOKEN_EXPIRES = 60 * 60
 JWT_REFRESH_TOKEN_EXPIRES = 30 * 24 * 60 * 60
 
 BLUEPRINT_ROLE_API = 'role_api'
