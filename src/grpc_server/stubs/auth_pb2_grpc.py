@@ -14,15 +14,15 @@ class AuthStub(object):
         Args:
             channel: A grpc.Channel.
         """
-        self.HasPermission = channel.unary_unary(
-                '/gateway_backend.Auth/HasPermission',
-                request_serializer=auth__pb2.Permission.SerializeToString,
-                response_deserializer=auth__pb2.IsPermitted.FromString,
+        self.GetPermissions = channel.unary_unary(
+                '/gateway_backend.Auth/GetPermissions',
+                request_serializer=auth__pb2.Token.SerializeToString,
+                response_deserializer=auth__pb2.Permissions.FromString,
                 )
-        self.HasRole = channel.unary_unary(
-                '/gateway_backend.Auth/HasRole',
-                request_serializer=auth__pb2.Role.SerializeToString,
-                response_deserializer=auth__pb2.RoleGranted.FromString,
+        self.GetRoles = channel.unary_unary(
+                '/gateway_backend.Auth/GetRoles',
+                request_serializer=auth__pb2.Token.SerializeToString,
+                response_deserializer=auth__pb2.Roles.FromString,
                 )
         self.IsAuthorized = channel.unary_unary(
                 '/gateway_backend.Auth/IsAuthorized',
@@ -34,13 +34,13 @@ class AuthStub(object):
 class AuthServicer(object):
     """Missing associated documentation comment in .proto file."""
 
-    def HasPermission(self, request, context):
+    def GetPermissions(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
-    def HasRole(self, request, context):
+    def GetRoles(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -55,15 +55,15 @@ class AuthServicer(object):
 
 def add_AuthServicer_to_server(servicer, server):
     rpc_method_handlers = {
-            'HasPermission': grpc.unary_unary_rpc_method_handler(
-                    servicer.HasPermission,
-                    request_deserializer=auth__pb2.Permission.FromString,
-                    response_serializer=auth__pb2.IsPermitted.SerializeToString,
+            'GetPermissions': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetPermissions,
+                    request_deserializer=auth__pb2.Token.FromString,
+                    response_serializer=auth__pb2.Permissions.SerializeToString,
             ),
-            'HasRole': grpc.unary_unary_rpc_method_handler(
-                    servicer.HasRole,
-                    request_deserializer=auth__pb2.Role.FromString,
-                    response_serializer=auth__pb2.RoleGranted.SerializeToString,
+            'GetRoles': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetRoles,
+                    request_deserializer=auth__pb2.Token.FromString,
+                    response_serializer=auth__pb2.Roles.SerializeToString,
             ),
             'IsAuthorized': grpc.unary_unary_rpc_method_handler(
                     servicer.IsAuthorized,
@@ -81,7 +81,7 @@ class Auth(object):
     """Missing associated documentation comment in .proto file."""
 
     @staticmethod
-    def HasPermission(request,
+    def GetPermissions(request,
             target,
             options=(),
             channel_credentials=None,
@@ -91,14 +91,14 @@ class Auth(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/gateway_backend.Auth/HasPermission',
-            auth__pb2.Permission.SerializeToString,
-            auth__pb2.IsPermitted.FromString,
+        return grpc.experimental.unary_unary(request, target, '/gateway_backend.Auth/GetPermissions',
+            auth__pb2.Token.SerializeToString,
+            auth__pb2.Permissions.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
     @staticmethod
-    def HasRole(request,
+    def GetRoles(request,
             target,
             options=(),
             channel_credentials=None,
@@ -108,9 +108,9 @@ class Auth(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/gateway_backend.Auth/HasRole',
-            auth__pb2.Role.SerializeToString,
-            auth__pb2.RoleGranted.FromString,
+        return grpc.experimental.unary_unary(request, target, '/gateway_backend.Auth/GetRoles',
+            auth__pb2.Token.SerializeToString,
+            auth__pb2.Roles.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 

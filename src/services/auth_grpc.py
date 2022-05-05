@@ -1,6 +1,7 @@
 import grpc
 from flask import Flask
 from flask_jwt_extended.exceptions import JWTExtendedException
+from jwt.exceptions import PyJWTError
 
 from grpc_server.utils import validate_token
 from src.db.access import PermissionAccess
@@ -13,16 +14,15 @@ class AuthServicer(auth_pb2_grpc.AuthServicer):
         self.flask_app = flask_app
         self.permission_access = PermissionAccess()
 
-    def HasPermission(self, request, context):
+    def GetPermissions(self, request, context):
         with self.flask_app.app_context():
             try:
                 token = validate_token(request.token)
                 role_ids = [role_id for role_id in token['roles'].keys()]
                 permissions = self.permission_access.get_permissions_by_roles(role_ids)
-                has_permission = request.permission in permissions
-                return auth_pb2.IsPermitted(has_permission=has_permission)
+                return auth_pb2.Permissions(permissions=permissions)
 
-            except JWTExtendedException as error:
+            except (JWTExtendedException, PyJWTError) as error:
                 self.error_response(grpc.StatusCode.UNAUTHENTICATED,
                                     str(error).encode(), context)
 
@@ -30,15 +30,14 @@ class AuthServicer(auth_pb2_grpc.AuthServicer):
                 self.error_response(grpc.StatusCode.ABORTED,
                                     str(error).encode(), context)
 
-    def HasRole(self, request, context):
+    def GetRoles(self, request, context):
         with self.flask_app.app_context():
             try:
                 token = validate_token(request.token)
                 roles = [role for role in token['roles'].values()]
-                has_role = request.role in roles
-                return auth_pb2.RoleGranted(has_role=has_role)
+                return auth_pb2.Roles(roles=roles)
 
-            except JWTExtendedException as error:
+            except (JWTExtendedException, PyJWTError) as error:
                 self.error_response(grpc.StatusCode.UNAUTHENTICATED,
                                     str(error).encode(), context)
 
@@ -52,11 +51,11 @@ class AuthServicer(auth_pb2_grpc.AuthServicer):
                 validate_token(request.token)
                 return auth_pb2.IsValid(is_valid=True)
 
-            except JWTExtendedException:
+            except (JWTExtendedException, PyJWTError):
                 return auth_pb2.IsValid(is_valid=False)
 
             except Exception as error:
-                self.error_response(grpc.StatusCode.UNAUTHENTICATED,
+                self.error_response(grpc.StatusCode.ABORTED,
                                     str(error).encode(), context)
 
     @staticmethod

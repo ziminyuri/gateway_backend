@@ -3,29 +3,19 @@ syntax = "proto3";
 package gateway_backend;
 
 service Auth {
-  rpc HasPermission (Permission) returns (IsPermitted) {}
+  rpc GetPermissions (Token) returns (Permissions) {}
 
-  rpc HasRole (Role) returns (RoleGranted) {}
+  rpc GetRoles (Token) returns (Roles) {}
 
   rpc IsAuthorized (Token) returns (IsValid) {}
 }
 
-message Permission {
-  string token = 1;
-  string permission = 2;
+message Permissions {
+  repeated string permissions = 1;
 }
 
-message IsPermitted {
-  bool has_permission = 1;
-}
-
-message Role {
-  string token = 1;
-  string role = 2;
-}
-
-message RoleGranted {
-  bool has_role = 1;
+message Roles {
+  repeated string roles = 1;
 }
 
 message Token {

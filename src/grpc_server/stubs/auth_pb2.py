@@ -15,43 +15,27 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\nauth.proto\x12\x0fgateway_backend\"/\n\nPermission\x12\r\n\x05token\x18\x01 \x01(\t\x12\x12\n\npermission\x18\x02 \x01(\t\"%\n\x0bIsPermitted\x12\x16\n\x0ehas_permission\x18\x01 \x01(\x08\"#\n\x04Role\x12\r\n\x05token\x18\x01 \x01(\t\x12\x0c\n\x04role\x18\x02 \x01(\t\"\x1f\n\x0bRoleGranted\x12\x10\n\x08has_role\x18\x01 \x01(\x08\"\x16\n\x05Token\x12\r\n\x05token\x18\x01 \x01(\t\"\x1b\n\x07IsValid\x12\x10\n\x08is_valid\x18\x01 \x01(\x08\x32\xda\x01\n\x04\x41uth\x12L\n\rHasPermission\x12\x1b.gateway_backend.Permission\x1a\x1c.gateway_backend.IsPermitted\"\x00\x12@\n\x07HasRole\x12\x15.gateway_backend.Role\x1a\x1c.gateway_backend.RoleGranted\"\x00\x12\x42\n\x0cIsAuthorized\x12\x16.gateway_backend.Token\x1a\x18.gateway_backend.IsValid\"\x00\x62\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\nauth.proto\x12\x0fgateway_backend\"\"\n\x0bPermissions\x12\x13\n\x0bpermissions\x18\x01 \x03(\t\"\x16\n\x05Roles\x12\r\n\x05roles\x18\x01 \x03(\t\"\x16\n\x05Token\x12\r\n\x05token\x18\x01 \x01(\t\"\x1b\n\x07IsValid\x12\x10\n\x08is_valid\x18\x01 \x01(\x08\x32\xd2\x01\n\x04\x41uth\x12H\n\x0eGetPermissions\x12\x16.gateway_backend.Token\x1a\x1c.gateway_backend.Permissions\"\x00\x12<\n\x08GetRoles\x12\x16.gateway_backend.Token\x1a\x16.gateway_backend.Roles\"\x00\x12\x42\n\x0cIsAuthorized\x12\x16.gateway_backend.Token\x1a\x18.gateway_backend.IsValid\"\x00\x62\x06proto3')
 
 
 
-_PERMISSION = DESCRIPTOR.message_types_by_name['Permission']
-_ISPERMITTED = DESCRIPTOR.message_types_by_name['IsPermitted']
-_ROLE = DESCRIPTOR.message_types_by_name['Role']
-_ROLEGRANTED = DESCRIPTOR.message_types_by_name['RoleGranted']
+_PERMISSIONS = DESCRIPTOR.message_types_by_name['Permissions']
+_ROLES = DESCRIPTOR.message_types_by_name['Roles']
 _TOKEN = DESCRIPTOR.message_types_by_name['Token']
 _ISVALID = DESCRIPTOR.message_types_by_name['IsValid']
-Permission = _reflection.GeneratedProtocolMessageType('Permission', (_message.Message,), {
-  'DESCRIPTOR' : _PERMISSION,
+Permissions = _reflection.GeneratedProtocolMessageType('Permissions', (_message.Message,), {
+  'DESCRIPTOR' : _PERMISSIONS,
   '__module__' : 'auth_pb2'
-  # @@protoc_insertion_point(class_scope:gateway_backend.Permission)
+  # @@protoc_insertion_point(class_scope:gateway_backend.Permissions)
   })
-_sym_db.RegisterMessage(Permission)
+_sym_db.RegisterMessage(Permissions)
 
-IsPermitted = _reflection.GeneratedProtocolMessageType('IsPermitted', (_message.Message,), {
-  'DESCRIPTOR' : _ISPERMITTED,
+Roles = _reflection.GeneratedProtocolMessageType('Roles', (_message.Message,), {
+  'DESCRIPTOR' : _ROLES,
   '__module__' : 'auth_pb2'
-  # @@protoc_insertion_point(class_scope:gateway_backend.IsPermitted)
+  # @@protoc_insertion_point(class_scope:gateway_backend.Roles)
   })
-_sym_db.RegisterMessage(IsPermitted)
-
-Role = _reflection.GeneratedProtocolMessageType('Role', (_message.Message,), {
-  'DESCRIPTOR' : _ROLE,
-  '__module__' : 'auth_pb2'
-  # @@protoc_insertion_point(class_scope:gateway_backend.Role)
-  })
-_sym_db.RegisterMessage(Role)
-
-RoleGranted = _reflection.GeneratedProtocolMessageType('RoleGranted', (_message.Message,), {
-  'DESCRIPTOR' : _ROLEGRANTED,
-  '__module__' : 'auth_pb2'
-  # @@protoc_insertion_point(class_scope:gateway_backend.RoleGranted)
-  })
-_sym_db.RegisterMessage(RoleGranted)
+_sym_db.RegisterMessage(Roles)
 
 Token = _reflection.GeneratedProtocolMessageType('Token', (_message.Message,), {
   'DESCRIPTOR' : _TOKEN,
@@ -71,18 +55,14 @@ _AUTH = DESCRIPTOR.services_by_name['Auth']
 if _descriptor._USE_C_DESCRIPTORS == False:
 
   DESCRIPTOR._options = None
-  _PERMISSION._serialized_start=31
-  _PERMISSION._serialized_end=78
-  _ISPERMITTED._serialized_start=80
-  _ISPERMITTED._serialized_end=117
-  _ROLE._serialized_start=119
-  _ROLE._serialized_end=154
-  _ROLEGRANTED._serialized_start=156
-  _ROLEGRANTED._serialized_end=187
-  _TOKEN._serialized_start=189
-  _TOKEN._serialized_end=211
-  _ISVALID._serialized_start=213
-  _ISVALID._serialized_end=240
-  _AUTH._serialized_start=243
-  _AUTH._serialized_end=461
+  _PERMISSIONS._serialized_start=31
+  _PERMISSIONS._serialized_end=65
+  _ROLES._serialized_start=67
+  _ROLES._serialized_end=89
+  _TOKEN._serialized_start=91
+  _TOKEN._serialized_end=113
+  _ISVALID._serialized_start=115
+  _ISVALID._serialized_end=142
+  _AUTH._serialized_start=145
+  _AUTH._serialized_end=355
 # @@protoc_insertion_point(module_scope)
