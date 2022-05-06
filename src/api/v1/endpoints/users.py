@@ -11,7 +11,8 @@ from flask_restful import Resource
 from src.api.v1.serializers.users import (AuthHistory, ChangePassword,
                                           LoginSchema, PersonalChanges,
                                           RefreshSchema, RegisterSchema,
-                                          TokenSchema)
+                                          TokenSchema,
+                                          TwoFactorAuthenticationSchema)
 from src.db.access import AuthHistoryAccess, TotpAccess, UserAccess
 from src.db.models import User
 from src.services.auth import (change_password, change_personal_data,
@@ -19,6 +20,7 @@ from src.services.auth import (change_password, change_personal_data,
                                deactivate_tokens, get_additional_claims,
                                is_valid_refresh_token, login_required,
                                prepare_auth_history_params)
+from src.services.exceptions import TokenException
 from src.templates.totp_sync_template import qr_code_template
 from src.utils import get_pagination_params
 
@@ -53,11 +55,15 @@ class Login(MethodResource, Resource):
         current_user = user_access.get_by_username(kwargs['username'])
 
         if current_user.check_password(kwargs['password']):
+            user_2fa = totp_access.get_by_user_id(current_user.id, quite=True)
+            if user_2fa:
+                return {'user_id': current_user.id}, HTTPStatus.OK
+
             access_token, refresh_token = create_tokens(current_user)
             auth_history_params = prepare_auth_history_params(current_user)
             auth_history_access.create(**auth_history_params)
-            return {'access_token': access_token, 'refresh_token': refresh_token},\
-                HTTPStatus.OK
+            return {'access_token': access_token,
+                    'refresh_token': refresh_token}, HTTPStatus.OK
 
 
 @doc(tags=[tag])
@@ -152,5 +158,22 @@ class TwoFactorAuthentication(MethodResource, Resource):
         headers = {'Content-Type': 'text/html'}
         return make_response(tmpl, 200, headers)
 
-    def post(self, user_id, **kwargs):
-        pass
+    @use_kwargs(TwoFactorAuthenticationSchema)
+    @marshal_with(TokenSchema)
+    def post(self, **kwargs):
+        """Подтверждение кода"""
+        user_id = kwargs['user_id']
+        code = kwargs['code']
+
+        secret = totp_access.get_by_user_id(user_id).secret
+        totp = pyotp.TOTP(secret)
+        if totp.verify(code):
+            current_user = user_access.get_by_id(user_id)
+            access_token, refresh_token = create_tokens(current_user)
+            auth_history_params = prepare_auth_history_params(current_user)
+            auth_history_access.create(**auth_history_params)
+
+            return {'access_token': access_token,
+                    'refresh_token': refresh_token}, HTTPStatus.OK
+
+        raise TokenException('Code is invalid')
