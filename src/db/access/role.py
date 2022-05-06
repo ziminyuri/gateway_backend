@@ -12,7 +12,7 @@ class RoleAccess(DatabaseAccess):
         self.permission_access = PermissionAccess()
         super().__init__(Role)
 
-    def get_all_permissions(self, id_: UUID):
+    def get_role_permissions(self, id_: UUID):
         """Получить все привилегии связанные с ролью"""
         role = self.get_by_id(id_)
         return role.permissions

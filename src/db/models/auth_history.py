@@ -2,10 +2,10 @@ from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.sql.functions import func
 
 from src.db import db
-from src.db.models.base import PrimaryModel
+from src.db.models.base import PrimaryUuidModel
 
 
-class AuthHistory(PrimaryModel):
+class AuthHistory(PrimaryUuidModel):
     __tablename__ = 'auth_history'
 
     login_at = db.Column(db.DateTime(timezone=True), server_default=func.now(), nullable=False)

@@ -1,10 +1,10 @@
 from sqlalchemy.dialects.postgresql import UUID
 
 from src.db import db
-from src.db.models.base import AuditModel, PrimaryModel
+from src.db.models.base import AuditModel, PrimaryUuidModel
 
 
-class Profile(PrimaryModel, AuditModel):
+class Profile(PrimaryUuidModel, AuditModel):
     __tablename__ = 'profile'
 
     first_name = db.Column(db.String, nullable=False)
