@@ -128,3 +128,7 @@ def change_password(personal_data):
 
 def get_user_agent() -> str:
     return request.headers.get('User-Agent', 'No User-Agent')
+
+
+def prepare_auth_history_params(current_user) -> dict:
+    return {'user_agent': get_user_agent(), 'user_id': current_user.id}

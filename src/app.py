@@ -9,6 +9,7 @@ from src.core.config import update_config
 from src.db import init_db
 from src.error_handlers import register_errors
 from src.services.auth import init_jwt
+from src.services.oauth import init_oauth
 
 migrate = Migrate()
 
@@ -25,6 +26,7 @@ def main(config=None):
     register_errors(flask_app)
     init_jwt(flask_app)
     init_commands(flask_app)
+    init_oauth(flask_app)
     return flask_app
 
 

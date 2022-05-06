@@ -14,8 +14,8 @@ from src.db.models import User
 from src.services.auth import (change_password, change_personal_data,
                                create_tokens, deactivate_all_user_tokens,
                                deactivate_tokens, get_additional_claims,
-                               get_user_agent, is_valid_refresh_token,
-                               login_required)
+                               is_valid_refresh_token, login_required,
+                               prepare_auth_history_params)
 from src.utils import get_pagination_params
 
 user_access = UserAccess()
@@ -49,7 +49,7 @@ class Login(MethodResource, Resource):
 
         if current_user.check_password(kwargs['password']):
             access_token, refresh_token = create_tokens(current_user)
-            auth_history_params = _prepare_auth_history_params(current_user)
+            auth_history_params = prepare_auth_history_params(current_user)
             auth_history_access.create(**auth_history_params)
             return {'access_token': access_token, 'refresh_token': refresh_token},\
                 HTTPStatus.OK
@@ -128,7 +128,3 @@ class Refresh(MethodResource, Resource):
                 str(user.id),
                 additional_claims=additional_claims
             )}, HTTPStatus.OK
-
-
-def _prepare_auth_history_params(current_user) -> dict:
-    return {'user_agent': get_user_agent(), 'user_id': current_user.id}
