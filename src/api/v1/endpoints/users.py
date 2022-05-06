@@ -1,25 +1,30 @@
 from http import HTTPStatus
 
+import pyotp
+from flask import make_response
 from flask_apispec import doc, marshal_with, use_kwargs
 from flask_apispec.views import MethodResource
-from flask_jwt_extended import create_access_token, get_jwt, jwt_required
+from flask_jwt_extended import (create_access_token, get_jwt, get_jwt_identity,
+                                jwt_required)
 from flask_restful import Resource
 
 from src.api.v1.serializers.users import (AuthHistory, ChangePassword,
                                           LoginSchema, PersonalChanges,
                                           RefreshSchema, RegisterSchema,
                                           TokenSchema)
-from src.db.access import AuthHistoryAccess, UserAccess
+from src.db.access import AuthHistoryAccess, TotpAccess, UserAccess
 from src.db.models import User
 from src.services.auth import (change_password, change_personal_data,
                                create_tokens, deactivate_all_user_tokens,
                                deactivate_tokens, get_additional_claims,
                                is_valid_refresh_token, login_required,
                                prepare_auth_history_params)
+from src.templates.totp_sync_template import qr_code_template
 from src.utils import get_pagination_params
 
 user_access = UserAccess()
 auth_history_access = AuthHistoryAccess()
+totp_access = TotpAccess()
 
 tag = 'User'
 
@@ -128,3 +133,24 @@ class Refresh(MethodResource, Resource):
                 str(user.id),
                 additional_claims=additional_claims
             )}, HTTPStatus.OK
+
+
+@doc(tags=[tag])
+class TwoFactorAuthentication(MethodResource, Resource):
+
+    @jwt_required(locations=['query_string'])
+    def get(self):
+        """Получение QR кода """
+        user_id = get_jwt_identity()
+        secret = pyotp.random_base32()
+
+        saved_secret = totp_access.create(user_id=user_id, secret=secret)
+        totp = pyotp.TOTP(saved_secret)
+        provisioning_url = totp.provisioning_uri(name=user_id + '@some.ru',
+                                                 issuer_name='Auth service')
+        tmpl = qr_code_template % provisioning_url
+        headers = {'Content-Type': 'text/html'}
+        return make_response(tmpl, 200, headers)
+
+    def post(self, user_id, **kwargs):
+        pass
