@@ -20,6 +20,9 @@ def update_config(app: Flask, config: dict):
     app.config['APISPEC_SWAGGER_UI_URL'] = APISPEC_SWAGGER_UI_URL
     # app.config['SQLALCHEMY_ECHO'] = True
 
+    app.config['GOOGLE_CLIENT_ID'] = OAUTH_GOOGLE_CLIENT_ID
+    app.config['GOOGLE_CLIENT_SECRET'] = OAUTH_GOOGLE_CLIENT_SECRET
+
     if config:
         app.config.update(config)
 
@@ -53,3 +56,6 @@ APISPEC_SWAGGER_UI_URL = '/swagger-ui/'
 
 REDIS_HOST = os.getenv('REDIS_HOST')
 REDIS_PORT = os.getenv('REDIS_PORT')
+
+OAUTH_GOOGLE_CLIENT_ID = os.getenv('OAUTH_GOOGLE_CLIENT_ID')
+OAUTH_GOOGLE_CLIENT_SECRET = os.getenv('OAUTH_GOOGLE_CLIENT_SECRET')

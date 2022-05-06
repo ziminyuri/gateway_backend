@@ -22,6 +22,10 @@ class UserAccess(DatabaseAccess):
 
         return user
 
+    @staticmethod
+    def get_by_username_or_none(username):
+        return User.lookup(username)
+
     def get_all_roles(self, id_: UUID):
         """Получить все роли пользователя"""
         user = self.get_by_id(id_)
