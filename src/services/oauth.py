@@ -32,7 +32,7 @@ def create_tokens(client, social_name: str):
     token = client.authorize_access_token()
     user_info = token.get("userinfo")
 
-    current_user = user_access.get_by_username_or_none(user_info['email'])
+    current_user = user_access.get_by_username(user_info['email'])
     if not current_user:
         current_user = user_access.create(**{
             'username': user_info['email'],
@@ -40,7 +40,10 @@ def create_tokens(client, social_name: str):
         })
 
     social_account = \
-        social_account_access.get_by_id_and_social_account(user_info['sub'], social_name)
+        social_account_access.get_by_params({
+            'id': user_info['sub'],
+            'social_name': social_name
+        })
 
     if not social_account:
         social_account_access.create(**{

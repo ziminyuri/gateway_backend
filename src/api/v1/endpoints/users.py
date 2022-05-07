@@ -52,7 +52,7 @@ class Login(MethodResource, Resource):
     def post(self, **kwargs):
         """ Авторизация пользователя """
 
-        current_user = user_access.get_by_username(kwargs['username'])
+        current_user = user_access.get_by_username(kwargs['username'], quiet=False)
 
         if current_user.check_password(kwargs['password']):
             user_2fa = totp_access.get_by_user_id(current_user.id, quite=True)
