@@ -1,19 +1,24 @@
-class DatabaseExceptions(Exception):
+class ServerBaseException(Exception):
+    def __init__(self, message):
+        self.message = message
+        super().__init__(message)
+
+
+class DatabaseExceptions(ServerBaseException):
     """Класс ошибок базы данных"""
-    def __init__(self, message):
-        self.message = message
-        super().__init__(message)
+    pass
 
 
-class UserException(Exception):
+class UserException(ServerBaseException):
     """Класс ошибки для юзера"""
-    def __init__(self, message):
-        self.message = message
-        super().__init__(message)
+    pass
 
 
-class TokenException(Exception):
+class TokenException(ServerBaseException):
     """Класс ошибки для токенов"""
-    def __init__(self, message):
-        self.message = message
-        super().__init__(message)
+    pass
+
+
+class RateLimitException(ServerBaseException):
+    """Класс для большого количества запросов на сервер"""
+    pass

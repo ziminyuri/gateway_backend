@@ -10,6 +10,7 @@ from src.api.v1.serializers.role_permission import (PermissionRoleSchema,
                                                     role_permission_args_parse)
 from src.db.access import RoleAccess
 from src.services.auth import login_required
+from src.services.rate_limit import check_rate_limit
 
 role_access = RoleAccess()
 tag = 'Permission role'
@@ -21,6 +22,7 @@ class PermissionRole(MethodResource, Resource):
 
     @marshal_with(PermissionSchema(many=True))
     @login_required()
+    @check_rate_limit
     def get(self, role_uuid: UUID, **kwargs):
         """Получить список всех ролей"""
         permissions = role_access.get_role_permissions(role_uuid)

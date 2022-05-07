@@ -8,12 +8,14 @@ from werkzeug import exceptions
 
 from src.api.v1.serializers.users import TokenSchema
 from src.services.oauth import create_tokens, oauth
+from src.services.rate_limit import check_rate_limit
 
 tag = 'Oauth'
 
 
 @doc(tags=[tag])
 class OauthLogin(MethodResource, Resource):
+    @check_rate_limit
     def get(self, social_name):
         """ Авторизация пользователя через OAuth"""
         client = oauth.create_client(social_name)
