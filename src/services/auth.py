@@ -1,3 +1,4 @@
+import uuid
 from datetime import date, timedelta
 from functools import wraps
 
@@ -124,6 +125,22 @@ def change_password(personal_data):
     user.check_new_password(new_password)
     user_access.update(personal_data['user_id'],
                        **{'hashed_password': user.hash_password(new_password)})
+
+
+def save_verification_code(user_id: uuid.UUID) -> str:
+    unique_code = str(uuid.uuid4())
+    key = cache.make_verification_key(user_id)
+    cache.setex_value(key, unique_code, 60)
+    return unique_code
+
+
+def validate_verification_code(user_id: str, client_code: str):
+    key = cache.make_verification_key(user_id)
+    server_code = cache.get_value(key)
+    if not server_code:
+        raise TokenException('Verification code has expired')
+    elif server_code != client_code:
+        raise TokenException('Verification code is invalid')
 
 
 def get_user_agent() -> str:
