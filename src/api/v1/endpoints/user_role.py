@@ -9,6 +9,7 @@ from src.api.v1.serializers.user_role import (UserRoleSchema,
                                               role_user_args_parse)
 from src.db.access import UserAccess
 from src.services.auth import login_required
+from src.services.rate_limit import check_rate_limit
 
 user_access = UserAccess()
 tag = 'User roles'
@@ -20,6 +21,7 @@ class UserRole(MethodResource, Resource):
 
     @marshal_with(RoleSchema(many=True))
     @login_required()
+    @check_rate_limit
     def get(self, **kwargs):
         """Получить список всех ролей"""
         user_id = kwargs['user_id']

@@ -16,6 +16,12 @@ class Redis:
         value = self.redis.get(key)
         return pickle.loads(value) if value else value
 
+    def add_request_count(self, key):
+        count = self.redis.incr(key)
+        if count == 1:
+            self.redis.expire(key, 59)
+        return count
+
     def delete(self, key):
         self.redis.delete(key)
 

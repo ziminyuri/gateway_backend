@@ -4,8 +4,8 @@ from flask import Flask
 from marshmallow.exceptions import ValidationError
 from sqlalchemy.orm.exc import NoResultFound
 
-from src.services.exceptions import (DatabaseExceptions, TokenException,
-                                     UserException)
+from src.services.exceptions import (DatabaseExceptions, RateLimitException,
+                                     TokenException, UserException)
 
 
 def handle_db_exception(error):
@@ -41,6 +41,11 @@ def validation_exception(error):
     return error, HTTPStatus.UNPROCESSABLE_ENTITY
 
 
+def handle_rate_limit_exceptions(error):
+    """Возвращает ошибку если юзер не прошел валидацию"""
+    return {'message': error.message}, HTTPStatus.FORBIDDEN
+
+
 def register_errors(app: Flask):
     app.register_error_handler(
         DatabaseExceptions, handle_db_exception)
@@ -52,3 +57,5 @@ def register_errors(app: Flask):
         UserException, handle_user_exceptions)
     app.register_error_handler(
         TokenException, handle_token_exceptions)
+    app.register_error_handler(
+        RateLimitException, handle_rate_limit_exceptions)

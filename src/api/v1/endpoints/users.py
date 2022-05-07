@@ -21,6 +21,7 @@ from src.services.auth import (change_password, change_personal_data,
                                is_valid_refresh_token, login_required,
                                prepare_auth_history_params)
 from src.services.exceptions import TokenException
+from src.services.rate_limit import check_rate_limit
 from src.templates.totp_sync_template import qr_code_template
 from src.utils import get_pagination_params
 
@@ -36,6 +37,7 @@ class Registration(MethodResource, Resource):
 
     @use_kwargs(RegisterSchema)
     @marshal_with(RegisterSchema)
+    @check_rate_limit
     def post(self, **kwargs):
         """ Регистрация нового пользователя """
 
@@ -49,6 +51,7 @@ class Login(MethodResource, Resource):
 
     @use_kwargs(LoginSchema)
     @marshal_with(TokenSchema)
+    @check_rate_limit
     def post(self, **kwargs):
         """ Авторизация пользователя """
 
@@ -69,6 +72,7 @@ class Login(MethodResource, Resource):
 @doc(tags=[tag])
 class Logout(MethodResource, Resource):
     @login_required()
+    @check_rate_limit
     def get(self, **kwargs):
         jti = get_jwt()["jti"]
         deactivate_tokens(kwargs['user_id'], jti)
@@ -78,6 +82,7 @@ class Logout(MethodResource, Resource):
 @doc(tags=[tag])
 class LogoutFromEverywhere(MethodResource, Resource):
     @login_required()
+    @check_rate_limit
     def get(self, **kwargs):
         """ Выйти со всех устройств """
         deactivate_all_user_tokens(kwargs['user_id'])
@@ -89,6 +94,7 @@ class AuthHistory(MethodResource, Resource):
 
     @marshal_with(AuthHistory(many=True))
     @login_required()
+    @check_rate_limit
     def get(self, **personal_data):
         """ История входов пользователя """
         res = auth_history_access.get_all(
@@ -103,6 +109,7 @@ class ChangePersonalData(MethodResource, Resource):
 
     @use_kwargs(PersonalChanges)
     @login_required()
+    @check_rate_limit
     def post(self, **kwargs):
         """ Внесение изменений в пользовательские данные """
         change_personal_data(kwargs)
@@ -114,6 +121,7 @@ class ChangePassword(MethodResource, Resource):
 
     @use_kwargs(ChangePassword)
     @login_required()
+    @check_rate_limit
     def post(self, **kwargs):
         """ Внесение изменений в пользовательские данные """
         change_password(kwargs)
@@ -126,6 +134,7 @@ class Refresh(MethodResource, Resource):
     @jwt_required(refresh=True, locations=['json'])
     @use_kwargs(RefreshSchema)
     @marshal_with(RefreshSchema)
+    @check_rate_limit
     def post(self, **kwargs):
         decoded_token = get_jwt()
         jti = decoded_token['jti']
@@ -145,6 +154,7 @@ class Refresh(MethodResource, Resource):
 class TwoFactorAuthentication(MethodResource, Resource):
 
     @jwt_required(locations=['query_string'])
+    @check_rate_limit
     def get(self):
         """Получение QR кода """
         user_id = get_jwt_identity()
@@ -160,6 +170,7 @@ class TwoFactorAuthentication(MethodResource, Resource):
 
     @use_kwargs(TwoFactorAuthenticationSchema)
     @marshal_with(TokenSchema)
+    @check_rate_limit
     def post(self, **kwargs):
         """Подтверждение кода"""
         user_id = kwargs['user_id']
