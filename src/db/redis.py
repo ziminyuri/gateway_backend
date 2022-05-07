@@ -26,6 +26,10 @@ class Redis:
         self.redis.delete(key)
 
     @staticmethod
+    def make_verification_key(user_id):
+        return f'{user_id}_2FA'
+
+    @staticmethod
     def make_key(user_id, user_agent, refresh_token=False):
         if refresh_token:
             return f"{user_id}_{user_agent}_"

@@ -19,7 +19,9 @@ from src.services.auth import (change_password, change_personal_data,
                                create_tokens, deactivate_all_user_tokens,
                                deactivate_tokens, get_additional_claims,
                                is_valid_refresh_token, login_required,
-                               prepare_auth_history_params)
+                               prepare_auth_history_params,
+                               save_verification_code,
+                               validate_verification_code)
 from src.services.exceptions import TokenException
 from src.services.rate_limit import check_rate_limit
 from src.templates.totp_sync_template import qr_code_template
@@ -59,8 +61,10 @@ class Login(MethodResource, Resource):
 
         if current_user.check_password(kwargs['password']):
             user_2fa = totp_access.get_by_user_id(current_user.id, quite=True)
+            verification_code = save_verification_code(current_user.id)
             if user_2fa:
-                return {'user_id': current_user.id}, HTTPStatus.OK
+                return {'user_id': current_user.id,
+                        'verification_code': verification_code}, HTTPStatus.OK
 
             access_token, refresh_token = create_tokens(current_user)
             auth_history_params = prepare_auth_history_params(current_user)
@@ -175,6 +179,8 @@ class TwoFactorAuthentication(MethodResource, Resource):
         """Подтверждение кода"""
         user_id = kwargs['user_id']
         code = kwargs['code']
+        verification_code = kwargs['verification_code']
+        validate_verification_code(user_id, verification_code)
 
         secret = totp_access.get_by_user_id(user_id).secret
         totp = pyotp.TOTP(secret)

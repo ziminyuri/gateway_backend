@@ -16,6 +16,7 @@ class TokenSchema(Schema):
     access_token = fields.String(dump_only=True)
     refresh_token = fields.String(dump_only=True)
     user_id = fields.String(dump_only=True)
+    verification_code = fields.String(dump_only=True)
 
 
 class RefreshSchema(Schema):
@@ -38,6 +39,6 @@ class AuthHistory(Schema):
 
 
 class TwoFactorAuthenticationSchema(Schema):
-    user_id = fields.String(load_only=True)
-    code = fields.Integer(load_only=True)
-    is_valid = fields.Boolean(dump_only=True)
+    user_id = fields.String(load_only=True, required=True)
+    code = fields.Integer(load_only=True, required=True)
+    verification_code = fields.String(load_only=True, required=True)
