@@ -15,16 +15,12 @@ class UserAccess(DatabaseAccess):
         super().__init__(User)
 
     @staticmethod
-    def get_by_username(username):
+    def get_by_username(username, quiet=True):
         user = User.lookup(username)
-        if not user:
+        if not user and not quiet:
             raise NoResultFound(f"No record with username: {username}")
 
         return user
-
-    @staticmethod
-    def get_by_username_or_none(username):
-        return User.lookup(username)
 
     def get_all_roles(self, id_: UUID):
         """Получить все роли пользователя"""

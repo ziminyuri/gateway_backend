@@ -8,6 +8,6 @@ class SocialAccountAccess(DatabaseAccess):
     def __init__(self):
         super().__init__(SocialAccount)
 
-    @staticmethod
-    def get_by_id_and_social_account(id, social_account):
-        return SocialAccount.lookup(id, social_account)
+    # @staticmethod
+    # def get_by_params(params: dict):
+    #     return SocialAccount.lookup(id, social_account)

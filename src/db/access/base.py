@@ -27,6 +27,10 @@ class DatabaseAccess(ABC):
 
         return entity
 
+    def get_by_params(self, params):
+        """ Получить запись из базы данных по параметрам """
+        return self.model.query.filter_by(**params).first()
+
     def get_all(self, filters: str = None, pagination: dict = None) -> List[db.Model]:
         """ Получаем все записи из базы данных с возможным фильтром """
         entities = self.model.query

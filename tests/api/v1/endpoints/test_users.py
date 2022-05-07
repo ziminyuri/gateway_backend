@@ -31,7 +31,7 @@ class TestUsers:
         assert user_from_db_by_id.is_superuser == test_user['is_superuser']
         assert user_from_db_by_id.username == data.get('username')
 
-        assert user_from_db_by_id == user_access.get_by_username(test_user['username'])
+        assert user_from_db_by_id == user_access.get_by_username(test_user['username'], quiet=False)
 
     def test_register_user_without_password(self, client):
         """ Регистрация пользователя без поля password """
