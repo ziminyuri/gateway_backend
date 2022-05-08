@@ -10,6 +10,7 @@ from src.db import init_db
 from src.error_handlers import register_errors
 from src.services.auth import init_jwt
 from src.services.oauth import init_oauth
+from src.middleware import init_trace
 
 migrate = Migrate()
 
@@ -17,6 +18,7 @@ migrate = Migrate()
 def main(config=None):
     flask_app = Flask(__name__)
     update_config(flask_app, config)
+    init_trace(flask_app)
     db = init_db(flask_app)
     migrate.init_app(flask_app, db)
     ma.init_app(flask_app)
@@ -27,6 +29,7 @@ def main(config=None):
     init_jwt(flask_app)
     init_commands(flask_app)
     init_oauth(flask_app)
+
     return flask_app
 
 
