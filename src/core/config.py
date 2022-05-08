@@ -53,3 +53,8 @@ APISPEC_SWAGGER_UI_URL = '/swagger-ui/'
 
 REDIS_HOST = os.getenv('REDIS_HOST')
 REDIS_PORT = os.getenv('REDIS_PORT')
+
+JAEGER_TYPE: str = "const"
+JAEGER_REPORTING_HOST: str = "jaeger"
+JAEGER_REPORTING_PORT: int = 6831
+JAEGER_SERVICE_NAME: str = "auth_app"
