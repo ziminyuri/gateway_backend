@@ -36,6 +36,11 @@ services:
     depends_on:
       - web
 
+  jaeger:
+      image: jaegertracing/all-in-one:latest
+      ports:
+      - "6831:6831"
+      - "16686:16686"
 
 volumes:
   redis-auth:
