@@ -1,16 +1,16 @@
 """empty message
 
-Revision ID: 4f53b1d307ec
+Revision ID: e444d59093db
 Revises: 
-Create Date: 2022-05-06 16:03:53.158122
+Create Date: 2022-05-09 17:12:14.012360
 
 """
-import sqlalchemy as sa
 from alembic import op
+import sqlalchemy as sa
 from sqlalchemy.dialects import postgresql
 
 # revision identifiers, used by Alembic.
-revision = '4f53b1d307ec'
+revision = 'e444d59093db'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -49,6 +49,8 @@ def upgrade():
     sa.Column('login_at', sa.DateTime(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('user_agent', sa.String(), nullable=False),
     sa.Column('user_id', postgresql.UUID(as_uuid=True), nullable=True),
+    sa.Column('device', sa.Text(), nullable=True),
+    sa.Column('ip_address', sa.String(), nullable=True),
     sa.ForeignKeyConstraint(['user_id'], ['user.id'], ),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('id')
