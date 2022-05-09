@@ -23,6 +23,9 @@ def update_config(app: Flask, config: dict):
     app.config['GOOGLE_CLIENT_ID'] = OAUTH_GOOGLE_CLIENT_ID
     app.config['GOOGLE_CLIENT_SECRET'] = OAUTH_GOOGLE_CLIENT_SECRET
 
+    app.config['RECAPTCHA_SITE_KEY'] = RECAPTCHA_SITE_KEY
+    app.config['RECAPTCHA_SECRET_KEY'] = RECAPTCHA_SECRET_KEY
+
     if config:
         app.config.update(config)
 
@@ -43,6 +46,8 @@ JWT_REFRESH_TOKEN_EXPIRES = 30 * 24 * 60 * 60
 
 BLUEPRINT_ROLE_API = 'role_api'
 BLUEPRINT_AUTH_API = 'auth_api'
+BLUEPRINT_CAPTCHA_API = 'captcha_api'
+
 URL_PREFIX = '/api/v1'
 
 APISPEC_SPEC = APISpec(
@@ -63,3 +68,6 @@ OAUTH_GOOGLE_CLIENT_SECRET = os.getenv('OAUTH_GOOGLE_CLIENT_SECRET')
 REQUEST_LIMIT_PER_MINUTE = 20
 
 JAEGER_HOST = os.getenv('JAEGER_HOST')
+
+RECAPTCHA_SITE_KEY = os.getenv('RECAPTCHA_SITE_KEY')
+RECAPTCHA_SECRET_KEY = os.getenv('RECAPTCHA_SECRET_KEY')

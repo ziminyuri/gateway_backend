@@ -1,3 +1,4 @@
+from .captcha import CaptchaSuccessTemplateView, CaptchaTemplateView
 from .oauth import OauthCallback, OauthLogin
 from .permission import Permission, Permissions
 from .role import Role, Roles
