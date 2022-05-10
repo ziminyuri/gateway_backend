@@ -11,4 +11,4 @@ COPY ./src ./src
 RUN pip install --no-cache-dir --upgrade -r requirements.txt
 RUN python -m grpc_tools.protoc -I. --python_out=. --grpc_python_out=. ./src/grpc_server/protos/auth.proto
 
-ENTRYPOINT ["/bin/sh", "-c" , "cd src && flask db upgrade && cd .. && python -m src.grpc_server.run"]
+ENTRYPOINT ["/bin/sh", "-c" , "python -m src.grpc_server.run"]

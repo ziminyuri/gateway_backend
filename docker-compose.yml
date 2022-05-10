@@ -29,30 +29,30 @@ services:
       - .env.prod
     depends_on:
       - db
-#  grpc:
-#    build:
-#      context: .
-#      dockerfile: Dockerfile.grpc
-#    container_name: auth-grpc
-#    volumes:
-#      - ./src:/usr/src/app/src
-#    env_file:
-#      - .env.prod
-#    depends_on:
-#      - web
+  grpc:
+    build:
+      context: .
+      dockerfile: Dockerfile.grpc
+    container_name: auth-grpc
+    volumes:
+      - ./src:/usr/src/app/src
+    env_file:
+      - .env.prod
+    depends_on:
+      - web
   nginx:
     build: ./nginx
     ports:
-      - '8000:80'
-#      - "50051:50051"
+      - '80:80'
+      - "50051:50051"
     depends_on:
-      - web
-#
-#  jaeger:
-#      image: jaegertracing/all-in-one:latest
-#      ports:
-#      - "6831:6831"
-#      - "16686:16686"
+      - grpc
+
+  jaeger:
+      image: jaegertracing/all-in-one:latest
+      ports:
+      - "6831:6831"
+      - "16686:16686"
 
 volumes:
   redis-auth:
