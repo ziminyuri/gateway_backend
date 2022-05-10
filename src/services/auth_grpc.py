@@ -3,9 +3,9 @@ from flask import Flask
 from flask_jwt_extended.exceptions import JWTExtendedException
 from jwt.exceptions import PyJWTError
 
-from grpc_server.utils import validate_token
 from src.db.access import PermissionAccess
-from src.grpc_server.stubs import auth_pb2, auth_pb2_grpc
+from src.grpc_server.protos import auth_pb2, auth_pb2_grpc
+from src.grpc_server.utils import validate_token
 
 
 class AuthServicer(auth_pb2_grpc.AuthServicer):

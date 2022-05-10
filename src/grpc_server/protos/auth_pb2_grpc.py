@@ -2,7 +2,8 @@
 """Client and server classes corresponding to protobuf-defined services."""
 import grpc
 
-from . import auth_pb2 as auth__pb2
+from src.grpc_server.protos import \
+    auth_pb2 as src_dot_grpc__server_dot_protos_dot_auth__pb2
 
 
 class AuthStub(object):
@@ -16,18 +17,18 @@ class AuthStub(object):
         """
         self.GetPermissions = channel.unary_unary(
                 '/gateway_backend.Auth/GetPermissions',
-                request_serializer=auth__pb2.Token.SerializeToString,
-                response_deserializer=auth__pb2.Permissions.FromString,
+                request_serializer=src_dot_grpc__server_dot_protos_dot_auth__pb2.Token.SerializeToString,
+                response_deserializer=src_dot_grpc__server_dot_protos_dot_auth__pb2.Permissions.FromString,
                 )
         self.GetRoles = channel.unary_unary(
                 '/gateway_backend.Auth/GetRoles',
-                request_serializer=auth__pb2.Token.SerializeToString,
-                response_deserializer=auth__pb2.Roles.FromString,
+                request_serializer=src_dot_grpc__server_dot_protos_dot_auth__pb2.Token.SerializeToString,
+                response_deserializer=src_dot_grpc__server_dot_protos_dot_auth__pb2.Roles.FromString,
                 )
         self.IsAuthorized = channel.unary_unary(
                 '/gateway_backend.Auth/IsAuthorized',
-                request_serializer=auth__pb2.Token.SerializeToString,
-                response_deserializer=auth__pb2.IsValid.FromString,
+                request_serializer=src_dot_grpc__server_dot_protos_dot_auth__pb2.Token.SerializeToString,
+                response_deserializer=src_dot_grpc__server_dot_protos_dot_auth__pb2.IsValid.FromString,
                 )
 
 
@@ -57,18 +58,18 @@ def add_AuthServicer_to_server(servicer, server):
     rpc_method_handlers = {
             'GetPermissions': grpc.unary_unary_rpc_method_handler(
                     servicer.GetPermissions,
-                    request_deserializer=auth__pb2.Token.FromString,
-                    response_serializer=auth__pb2.Permissions.SerializeToString,
+                    request_deserializer=src_dot_grpc__server_dot_protos_dot_auth__pb2.Token.FromString,
+                    response_serializer=src_dot_grpc__server_dot_protos_dot_auth__pb2.Permissions.SerializeToString,
             ),
             'GetRoles': grpc.unary_unary_rpc_method_handler(
                     servicer.GetRoles,
-                    request_deserializer=auth__pb2.Token.FromString,
-                    response_serializer=auth__pb2.Roles.SerializeToString,
+                    request_deserializer=src_dot_grpc__server_dot_protos_dot_auth__pb2.Token.FromString,
+                    response_serializer=src_dot_grpc__server_dot_protos_dot_auth__pb2.Roles.SerializeToString,
             ),
             'IsAuthorized': grpc.unary_unary_rpc_method_handler(
                     servicer.IsAuthorized,
-                    request_deserializer=auth__pb2.Token.FromString,
-                    response_serializer=auth__pb2.IsValid.SerializeToString,
+                    request_deserializer=src_dot_grpc__server_dot_protos_dot_auth__pb2.Token.FromString,
+                    response_serializer=src_dot_grpc__server_dot_protos_dot_auth__pb2.IsValid.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -92,8 +93,8 @@ class Auth(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/gateway_backend.Auth/GetPermissions',
-            auth__pb2.Token.SerializeToString,
-            auth__pb2.Permissions.FromString,
+            src_dot_grpc__server_dot_protos_dot_auth__pb2.Token.SerializeToString,
+            src_dot_grpc__server_dot_protos_dot_auth__pb2.Permissions.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
@@ -109,8 +110,8 @@ class Auth(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/gateway_backend.Auth/GetRoles',
-            auth__pb2.Token.SerializeToString,
-            auth__pb2.Roles.FromString,
+            src_dot_grpc__server_dot_protos_dot_auth__pb2.Token.SerializeToString,
+            src_dot_grpc__server_dot_protos_dot_auth__pb2.Roles.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
@@ -126,7 +127,7 @@ class Auth(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/gateway_backend.Auth/IsAuthorized',
-            auth__pb2.Token.SerializeToString,
-            auth__pb2.IsValid.FromString,
+            src_dot_grpc__server_dot_protos_dot_auth__pb2.Token.SerializeToString,
+            src_dot_grpc__server_dot_protos_dot_auth__pb2.IsValid.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
