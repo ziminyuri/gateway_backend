@@ -6,6 +6,7 @@ from flask import Flask, request
 from flask_jwt_extended import (JWTManager, create_access_token,
                                 create_refresh_token, decode_token, get_jwt,
                                 get_jwt_identity, jwt_required)
+from user_agents import parse
 
 from src.core.config import JWT_ACCESS_TOKEN_EXPIRES, JWT_REFRESH_TOKEN_EXPIRES
 from src.db.access import AuthHistoryAccess, UserAccess
@@ -118,10 +119,9 @@ def change_personal_data(personal_data):
 
 
 def change_password(personal_data):
-    old_password = personal_data['old_password']
     new_password = personal_data['new_password']
     user = user_access.get_by_id(personal_data['user_id'])
-    user.check_password(old_password)
+    user.check_password(personal_data['old_password'])
     user.check_new_password(new_password)
     user_access.update(personal_data['user_id'],
                        **{'hashed_password': user.hash_password(new_password)})
@@ -147,5 +147,22 @@ def get_user_agent() -> str:
     return request.headers.get('User-Agent', 'No User-Agent')
 
 
+def get_type_device(user_agent):
+    user_agent = parse(user_agent)
+    if user_agent.is_pc:
+        return 'pc'
+    if user_agent.is_tablet:
+        return 'tablet'
+    if user_agent.is_mobile:
+        return 'mobile'
+    return 'other'
+
+
 def prepare_auth_history_params(current_user) -> dict:
-    return {'user_agent': get_user_agent(), 'user_id': current_user.id}
+    user_agent = get_user_agent()
+    return {
+        'user_agent': user_agent,
+        'user_id': current_user.id,
+        'device_type': get_type_device(user_agent),
+        'ip_address': request.remote_addr
+    }

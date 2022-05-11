@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: 4f53b1d307ec
+Revision ID: d7e3902ce748
 Revises: 
-Create Date: 2022-05-06 16:03:53.158122
+Create Date: 2022-05-11 10:06:21.806222
 
 """
 import sqlalchemy as sa
@@ -10,7 +10,7 @@ from alembic import op
 from sqlalchemy.dialects import postgresql
 
 # revision identifiers, used by Alembic.
-revision = '4f53b1d307ec'
+revision = 'd7e3902ce748'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -49,9 +49,10 @@ def upgrade():
     sa.Column('login_at', sa.DateTime(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('user_agent', sa.String(), nullable=False),
     sa.Column('user_id', postgresql.UUID(as_uuid=True), nullable=True),
+    sa.Column('device_type', sa.String(length=10), nullable=False),
+    sa.Column('ip_address', sa.String(), nullable=True),
     sa.ForeignKeyConstraint(['user_id'], ['user.id'], ),
-    sa.PrimaryKeyConstraint('id'),
-    sa.UniqueConstraint('id')
+    sa.PrimaryKeyConstraint('id', 'device_type')
     )
     op.create_table('permission_role',
     sa.Column('permission_id', sa.Integer(), nullable=False),
@@ -86,8 +87,7 @@ def upgrade():
     sa.Column('social_name', sa.String(), nullable=False),
     sa.Column('user_id', postgresql.UUID(as_uuid=True), nullable=True),
     sa.ForeignKeyConstraint(['user_id'], ['user.id'], ),
-    sa.PrimaryKeyConstraint('id'),
-    sa.UniqueConstraint('user_id')
+    sa.PrimaryKeyConstraint('id')
     )
     op.create_table('totp',
     sa.Column('id', sa.Integer(), nullable=False),

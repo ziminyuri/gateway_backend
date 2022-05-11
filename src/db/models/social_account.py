@@ -9,7 +9,7 @@ class SocialAccount(AuditModel):
 
     id = db.Column(db.String, nullable=False, primary_key=True)
     social_name = db.Column(db.String, nullable=False)
-    user_id = db.Column(UUID(as_uuid=True), db.ForeignKey('user.id'), unique=True)
+    user_id = db.Column(UUID(as_uuid=True), db.ForeignKey('user.id'))
 
     @classmethod
     def lookup(cls, id, social_name):
