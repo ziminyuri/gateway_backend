@@ -1,4 +1,5 @@
 from sqlalchemy.dialects.postgresql import UUID
+
 from src.db import db
 from src.db.models.base import AuditModel
 
