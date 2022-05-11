@@ -26,3 +26,6 @@
 
 ## Документация
 [OpenAPI](http://0.0.0.0:8000/swagger-ui/ "Посмотреть")
+
+## AsyncApi (for grpc)
+[AsyncApi](https://github.com/ziminyuri/Async_API "Посмотреть")
