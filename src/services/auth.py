@@ -163,6 +163,6 @@ def prepare_auth_history_params(current_user) -> dict:
     return {
         'user_agent': user_agent,
         'user_id': current_user.id,
-        'device': get_type_device(user_agent),
+        'device_type': get_type_device(user_agent),
         'ip_address': request.remote_addr
     }
