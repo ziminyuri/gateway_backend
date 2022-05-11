@@ -1,13 +1,14 @@
+import uuid
+
+from sqlalchemy import UniqueConstraint
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.sql.functions import func
 
 from src.db import db
-import uuid
-from sqlalchemy import UniqueConstraint
 
 
 def create_partition_history(target, connection, **kw) -> None:
-    """ Парцеляция таблицы AuthHistory """
+    """ Партицирование таблицы AuthHistory """
     connection.execute(
         """CREATE TABLE IF NOT EXISTS "auth_history_pc" PARTITION OF "auth_history" FOR VALUES IN ('pc')"""
     )
@@ -40,5 +41,3 @@ class AuthHistory(db.Model):
 
     device_type = db.Column(db.String(10), nullable=False, primary_key=True)
     ip_address = db.Column(db.String)
-
-

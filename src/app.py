@@ -19,7 +19,7 @@ migrate = Migrate()
 def main(config=None):
     flask_app = Flask(__name__, template_folder='templates')
     update_config(flask_app, config)
-    # init_trace(flask_app)
+    init_trace(flask_app)
     db = init_db(flask_app)
     migrate.init_app(flask_app, db)
     ma.init_app(flask_app)
