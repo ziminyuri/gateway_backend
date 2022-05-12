@@ -79,14 +79,13 @@ def login_required(superuser=False):
     return wrapper
 
 
-def is_valid_refresh_token(user_id, jti) -> bool:
+def validate_refresh_token(user_id, jti):
     """ Проверка, что refresh токен валидный """
 
     user_agent = get_user_agent()
     token_from_cache = cache.get_value(cache.make_key(user_id, user_agent, refresh_token=True))
     if not jti == token_from_cache:
         raise TokenException('Refresh token is invalid')
-    return True
 
 
 def get_additional_claims(user) -> dict:
