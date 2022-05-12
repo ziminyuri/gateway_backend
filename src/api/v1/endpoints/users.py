@@ -18,9 +18,8 @@ from src.db.models import User
 from src.services.auth import (change_password, change_personal_data,
                                create_tokens, deactivate_all_user_tokens,
                                deactivate_tokens, get_additional_claims,
-                               is_valid_refresh_token, login_required,
-                               prepare_auth_history_params,
-                               save_verification_code,
+                               login_required, prepare_auth_history_params,
+                               save_verification_code, validate_refresh_token,
                                validate_verification_code)
 from src.services.exceptions import TokenException
 from src.services.rate_limit import check_rate_limit
@@ -144,14 +143,14 @@ class Refresh(MethodResource, Resource):
         jti = decoded_token['jti']
         user_id = decoded_token['sub']
 
-        if is_valid_refresh_token(user_id, jti):
-            user = User.identify(user_id)
-            additional_claims = get_additional_claims(user)
+        validate_refresh_token(user_id, jti)
+        user = User.identify(user_id)
+        additional_claims = get_additional_claims(user)
 
-            return {'access_token': create_access_token(
-                str(user.id),
-                additional_claims=additional_claims
-            )}, HTTPStatus.OK
+        return {'access_token': create_access_token(
+            str(user.id),
+            additional_claims=additional_claims
+        )}, HTTPStatus.OK
 
 
 @doc(tags=[tag])
