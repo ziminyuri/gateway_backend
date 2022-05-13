@@ -18,9 +18,10 @@ from src.db.models import User
 from src.services.auth import (change_password, change_personal_data,
                                create_tokens, deactivate_all_user_tokens,
                                deactivate_tokens, get_additional_claims,
-                               login_required, prepare_auth_history_params,
+                               login_required,
                                save_verification_code, validate_refresh_token,
                                validate_verification_code)
+from src.services.auth_history import prepare_auth_history_params
 from src.services.exceptions import TokenException
 from src.services.rate_limit import check_rate_limit
 from src.templates.totp_sync_template import qr_code_template
