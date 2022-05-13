@@ -5,7 +5,7 @@ from flask import Flask
 
 from src.db.access import AuthHistoryAccess, SocialAccountAccess, UserAccess
 from src.services.auth import create_tokens as creating_tokens
-from src.services.auth import prepare_auth_history_params
+from src.services.auth_history import prepare_auth_history_params
 
 oauth = OAuth()
 
