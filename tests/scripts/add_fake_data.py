@@ -37,12 +37,19 @@ def add_fake_data(pg_conn: _connection):
         for j in range(n*i, n*i+n):
             id = uuid.uuid4()
             profile_id = uuid.uuid4()
-            create_user_query = f"INSERT INTO public.user (id, username, hashed_password, is_active, is_superuser) VALUES ('{id}', 'testtest{j}', 'test', true, false);"
+            create_user_query = f"INSERT INTO public.user (id, username, hashed_password," \
+                                f" is_active, is_superuser) " \
+                                f"VALUES ('{id}', 'testtest{j}', 'test', true, false);"
             postgres_saver.save_data(create_user_query)
-            create_user_role_query = f"INSERT INTO public.user_role (user_id, role_id) VALUES ('{id}', '{role_id}');"
+            create_user_role_query = f"INSERT INTO public.user_role (user_id, role_id) " \
+                                     f"VALUES ('{id}', '{role_id}');"
             postgres_saver.save_data(create_user_role_query)
 
-            create_user_profile_query = f"INSERT INTO public.profile (id, is_active, first_name, last_name, phone, email, user_id, birthday) VALUES ('{profile_id}', true, 'Иван{j}','Иванов{j}', '7999999{j}', 'test{j}@yandex.ru', '{id}', '{today}');"
+            create_user_profile_query = f"INSERT INTO public.profile " \
+                                        f"(id, is_active, first_name, last_name, phone," \
+                                        f" email, user_id, birthday) " \
+                                        f"VALUES ('{profile_id}', true, 'Иван{j}','Иванов{j}'," \
+                                        f" '7999999{j}', 'test{j}@yandex.ru', '{id}', '{today}');"
             postgres_saver.save_data(create_user_profile_query)
 
 

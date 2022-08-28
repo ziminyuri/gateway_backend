@@ -12,7 +12,7 @@ from src.api.v1.serializers.users import (AuthHistory, ChangePassword,
                                           LoginSchema, PersonalChanges,
                                           RefreshSchema, RegisterSchema,
                                           TokenSchema,
-                                          TwoFactorAuthenticationSchema, UserSchema, UserRoleSchema)
+                                          TwoFactorAuthenticationSchema, UserSchema)
 from src.db.access import AuthHistoryAccess, TotpAccess, UserAccess, RoleAccess
 from src.db.models import User
 from src.services.auth import (change_password, change_personal_data,

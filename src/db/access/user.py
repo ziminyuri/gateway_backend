@@ -41,7 +41,8 @@ class UserAccess(DatabaseAccess):
 
     def get_all_users(self, role_id=None):
         if role_id:
-            entities = self.model.query.join(user_role_table).filter(user_role_table.columns.role_id.in_([params]))
+            entities = self.model.query.join(user_role_table).\
+                filter(user_role_table.columns.role_id.in_([role_id]))
         else:
             entities = self.model.query,
         return entities.all()
