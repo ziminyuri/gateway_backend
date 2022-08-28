@@ -47,6 +47,7 @@ JWT_REFRESH_TOKEN_EXPIRES = 30 * 24 * 60 * 60
 BLUEPRINT_ROLE_API = 'role_api'
 BLUEPRINT_AUTH_API = 'auth_api'
 BLUEPRINT_CAPTCHA_API = 'captcha_api'
+BLUEPRINT_USER_API = 'user_api'
 
 URL_PREFIX = '/api/v1'
 

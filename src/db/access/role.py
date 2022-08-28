@@ -29,6 +29,10 @@ class RoleAccess(DatabaseAccess):
         role.permissions.remove(permission)
         self.commit()
 
+    def get_all_users(self, role_id):
+        role = self.get_by_id(role_id)
+        return role.users
+
     def _get_permission_role(self, permission_id: UUID, role_id: UUID):
         """Получить роли и привилегию по uuid"""
         role = self.get_by_id(role_id)
