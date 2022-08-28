@@ -1,6 +1,5 @@
 from marshmallow import Schema, fields
 from .profile import ProfileSchema
-from src.api.v1.serializers import ma
 
 
 class RegisterSchema(Schema):
