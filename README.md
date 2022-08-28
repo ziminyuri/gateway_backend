@@ -29,3 +29,10 @@
 
 ## AsyncApi (for grpc)
 [AsyncApi](https://github.com/ziminyuri/Async_API "Посмотреть")
+
+## Чтобы создать суперпользователя, необходимо:
+1) `сd src`
+2) `flask create_superuser USERNAME PASSWORD`
+
+## Чтобы записать БД фейковыми данными запустите скрипт
+`tests/scripts/add_fake_data.py`

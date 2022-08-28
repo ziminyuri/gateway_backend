@@ -1,7 +1,7 @@
 from flask import Flask
 from flask_migrate import Migrate
 
-from src.api.blueprints import auth_bp, captcha_bp, role_bp
+from src.api.blueprints import auth_bp, captcha_bp, role_bp, user_bp
 from src.api.docs import docs
 from src.api.v1.serializers import ma
 from src.commands import init_commands
@@ -26,6 +26,7 @@ def main(config=None):
     flask_app.register_blueprint(auth_bp)
     flask_app.register_blueprint(role_bp)
     flask_app.register_blueprint(captcha_bp)
+    flask_app.register_blueprint(user_bp)
     docs.init_app(flask_app)
     register_errors(flask_app)
     init_jwt(flask_app)

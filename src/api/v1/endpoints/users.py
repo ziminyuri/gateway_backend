@@ -12,14 +12,14 @@ from src.api.v1.serializers.users import (AuthHistory, ChangePassword,
                                           LoginSchema, PersonalChanges,
                                           RefreshSchema, RegisterSchema,
                                           TokenSchema,
-                                          TwoFactorAuthenticationSchema)
-from src.db.access import AuthHistoryAccess, TotpAccess, UserAccess
+                                          TwoFactorAuthenticationSchema, UserSchema, UserRoleSchema)
+from src.db.access import AuthHistoryAccess, TotpAccess, UserAccess, RoleAccess
 from src.db.models import User
 from src.services.auth import (change_password, change_personal_data,
                                create_tokens, deactivate_all_user_tokens,
                                deactivate_tokens, get_additional_claims,
-                               login_required,
-                               save_verification_code, validate_refresh_token,
+                               login_required, save_verification_code,
+                               validate_refresh_token,
                                validate_verification_code)
 from src.services.auth_history import prepare_auth_history_params
 from src.services.exceptions import TokenException
@@ -28,6 +28,7 @@ from src.templates.totp_sync_template import qr_code_template
 from src.utils import get_pagination_params
 
 user_access = UserAccess()
+role_access = RoleAccess()
 auth_history_access = AuthHistoryAccess()
 totp_access = TotpAccess()
 
@@ -194,3 +195,11 @@ class TwoFactorAuthentication(MethodResource, Resource):
                     'refresh_token': refresh_token}, HTTPStatus.OK
 
         raise TokenException('Code is invalid')
+
+
+class Users(MethodResource, Resource):
+    @marshal_with(UserSchema(many=True))
+    def get(self, **kwargs):
+        """Получить список всех ролей"""
+        users = user_access.get_all_users()
+        return users, HTTPStatus.OK

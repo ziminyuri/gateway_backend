@@ -3,7 +3,8 @@ from src.api.v1.serializers import ma
 
 class UserRoleSchema(ma.Schema):
 
-    role_id = ma.UUID(required=True)
+    role_id = ma.Int(required=True)
+    user_id = ma.UUID(required=True)
 
 
 def role_user_args_parse(**kwargs):

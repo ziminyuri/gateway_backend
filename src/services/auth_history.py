@@ -1,5 +1,6 @@
 from flask import request
 from user_agents import parse
+
 from src.services.auth import get_user_agent
 
 

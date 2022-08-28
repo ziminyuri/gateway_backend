@@ -6,10 +6,13 @@ from flask_apispec.views import MethodResource
 from flask_restful import Resource
 
 from src.api.v1.serializers.role import RoleSchema, role_args_parse
-from src.db.access import RoleAccess
+from src.api.v1.serializers.users import UserSchema
+from src.db.access import RoleAccess, UserAccess
 from src.services.auth import login_required
 
 role_access = RoleAccess()
+user_access = UserAccess()
+
 tag = 'Role'
 
 
@@ -18,7 +21,6 @@ class Roles(MethodResource, Resource):
     """Показать список всех ролей или создать новую роль"""
 
     @marshal_with(RoleSchema(many=True))
-    @login_required(superuser=True)
     def get(self, **kwargs):
         """Получить список всех ролей"""
         roles = role_access.get_all()
@@ -60,3 +62,13 @@ class Role(MethodResource, Resource):
         """Удаление роли"""
         role_access.delete(uuid)
         return {'message': 'Role is deleted'}, HTTPStatus.OK
+
+
+class RoleUsers(MethodResource, Resource):
+    """ Получить всех пользователей роли"""
+
+    @marshal_with(UserSchema(many=True))
+    def get(self, role_id):
+        """Получить список пользователей по роли"""
+        users = user_access.get_all_users(role_id)
+        return users, HTTPStatus.OK

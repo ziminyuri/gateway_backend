@@ -1,4 +1,6 @@
 from marshmallow import Schema, fields
+from .profile import ProfileSchema
+from src.api.v1.serializers import ma
 
 
 class RegisterSchema(Schema):
@@ -44,3 +46,13 @@ class TwoFactorAuthenticationSchema(Schema):
     user_id = fields.String(load_only=True, required=True)
     code = fields.Integer(load_only=True, required=True)
     verification_code = fields.String(load_only=True, required=True)
+
+
+class UserRoleSchema(Schema):
+    role = fields.String()
+
+
+class UserSchema(Schema):
+    username = fields.String(dump_only=True)
+    id = fields.String(dump_only=True)
+    profile = fields.Nested(ProfileSchema(only=('email', 'last_name', 'phone', 'first_name')))
